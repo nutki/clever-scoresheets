@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Clickable Image</title>
+    <style>
+        @font-face {
+            font-family: "numbers";
+            src: url(data:font/woff2;base64,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)format("woff2");
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        #outer-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #image-container {
+            width: 700px;
+            height: 1000px;
+            overflow: hidden;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform-origin: center;
+            transform: translate(-50%, -50%);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+        }
+
+        .mark {
+            position: absolute;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            font-family: 'numbers';
+            font-size: 30px;
+            line-height: 35px;
+            width: 35px;
+            height: 35px;
+            text-align: center;
+        }
+
+        .circle.marked {
+            border: 5px solid black;
+        }
+
+        .cross.marked {
+            background-image: url('Ex.png');
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+
+        .x-sign {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            line-height: 1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <input type="range" id="scale-slider" value="100" min="30" max="100" step="1" oninput="scaleContainer()">
+    <div id="outer-container">
+        <div id="image-container">
+            <img id="resizable-image" src="back1.png" alt="Resizable Image">
+            
+            <div id="1r1" class="mark circle" style="left: calc(141.5px + 0 * 96.6px); top: 27px;"></div>
+            <div id="1r2" class="mark circle" style="left: calc(141.5px + 1 * 96.6px); top: 27px;"></div>
+            <div id="1r3" class="mark circle" style="left: calc(141.5px + 2 * 96.6px); top: 27px;"></div>
+            <div id="1r4" class="mark circle" style="left: calc(141.5px + 3 * 96.6px); top: 27px;"></div>
+            <div id="1r5" class="mark circle" style="left: calc(141.5px + 4 * 96.6px); top: 27px;"></div>
+            <div id="1r6" class="mark circle" style="left: calc(141.5px + 5 * 96.6px); top: 27px;"></div>
+
+            <div id="1R1" class="mark cross" style="left: calc(141.5px + 0 * 96.6px); top: 27px;"></div>
+            <div id="1R2" class="mark cross" style="left: calc(141.5px + 1 * 96.6px); top: 27px;"></div>
+            <div id="1R3" class="mark cross" style="left: calc(141.5px + 2 * 96.6px); top: 27px;"></div>
+            <div id="1R4" class="mark cross" style="left: calc(141.5px + 3 * 96.6px); top: 27px;"></div>
+            <div id="1R5" class="mark cross" style="left: calc(141.5px + 4 * 96.6px); top: 27px;"></div>
+            <div id="1R6" class="mark cross" style="left: calc(141.5px + 5 * 96.6px); top: 27px;"></div>
+
+            <div id="1a1" class="mark circle" style="left: calc(215px + 0 * 66.3px); top: 150.85px;"></div>
+            <div id="1a2" class="mark circle" style="left: calc(215px + 1 * 66.3px); top: 150.85px;"></div>
+            <div id="1a3" class="mark circle" style="left: calc(215px + 2 * 66.3px); top: 150.85px;"></div>
+            <div id="1a4" class="mark circle" style="left: calc(215px + 3 * 66.3px); top: 150.85px;"></div>
+            <div id="1a5" class="mark circle" style="left: calc(215px + 4 * 66.3px); top: 150.85px;"></div>
+            <div id="1a6" class="mark circle" style="left: calc(215px + 5 * 66.3px); top: 150.85px;"></div>
+            <div id="1a7" class="mark circle" style="left: calc(215px + 6 * 66.3px); top: 150.85px;"></div>
+
+            <div id="1A1" class="mark cross" style="left: calc(215px + 0 * 66.3px); top: 150.85px;"></div>
+            <div id="1A2" class="mark cross" style="left: calc(215px + 1 * 66.3px); top: 150.85px;"></div>
+            <div id="1A3" class="mark cross" style="left: calc(215px + 2 * 66.3px); top: 150.85px;"></div>
+            <div id="1A4" class="mark cross" style="left: calc(215px + 3 * 66.3px); top: 150.85px;"></div>
+            <div id="1A5" class="mark cross" style="left: calc(215px + 4 * 66.3px); top: 150.85px;"></div>
+            <div id="1A6" class="mark cross" style="left: calc(215px + 5 * 66.3px); top: 150.85px;"></div>
+            <div id="1A7" class="mark cross" style="left: calc(215px + 6 * 66.3px); top: 150.85px;"></div>
+
+            <div id="1b1" class="mark circle" style="left: calc(215px + 0 * 66.3px); top: 258.5px;"></div>
+            <div id="1b2" class="mark circle" style="left: calc(215px + 1 * 66.3px); top: 258.5px;"></div>
+            <div id="1b3" class="mark circle" style="left: calc(215px + 2 * 66.3px); top: 258.5px;"></div>
+            <div id="1b4" class="mark circle" style="left: calc(215px + 3 * 66.3px); top: 258.5px;"></div>
+            <div id="1b5" class="mark circle" style="left: calc(215px + 4 * 66.3px); top: 258.5px;"></div>
+            <div id="1b6" class="mark circle" style="left: calc(215px + 5 * 66.3px); top: 258.5px;"></div>
+            <div id="1b7" class="mark circle" style="left: calc(215px + 6 * 66.3px); top: 258.5px;"></div>
+
+            <div id="1B1" class="mark cross" style="left: calc(215px + 0 * 66.3px); top: 258.5px;"></div>
+            <div id="1B2" class="mark cross" style="left: calc(215px + 1 * 66.3px); top: 258.5px;"></div>
+            <div id="1B3" class="mark cross" style="left: calc(215px + 2 * 66.3px); top: 258.5px;"></div>
+            <div id="1B4" class="mark cross" style="left: calc(215px + 3 * 66.3px); top: 258.5px;"></div>
+            <div id="1B5" class="mark cross" style="left: calc(215px + 4 * 66.3px); top: 258.5px;"></div>
+            <div id="1B6" class="mark cross" style="left: calc(215px + 5 * 66.3px); top: 258.5px;"></div>
+            <div id="1B7" class="mark cross" style="left: calc(215px + 6 * 66.3px); top: 258.5px;"></div>
+
+            <div id="111" class="mark cross" style="left: calc(39px + 0 * 60px); top: calc(359px + 0 * 57px);"></div>
+            <div id="112" class="mark cross" style="left: calc(39px + 1 * 60px); top: calc(359px + 0 * 57px);"></div>
+            <div id="113" class="mark cross" style="left: calc(39px + 2 * 60px); top: calc(359px + 0 * 57px);"></div>
+            <div id="114" class="mark cross" style="left: calc(39px + 0 * 60px); top: calc(359px + 1 * 57px);"></div>
+            <div id="115" class="mark cross" style="left: calc(39px + 1 * 60px); top: calc(359px + 1 * 57px);"></div>
+            <div id="116" class="mark cross" style="left: calc(39px + 3 * 60px); top: calc(359px + 1 * 57px);"></div>
+            <div id="117" class="mark cross" style="left: calc(39px + 0 * 60px); top: calc(359px + 2 * 57px);"></div>
+            <div id="118" class="mark cross" style="left: calc(39px + 2 * 60px); top: calc(359px + 2 * 57px);"></div>
+            <div id="119" class="mark cross" style="left: calc(39px + 3 * 60px); top: calc(359px + 2 * 57px);"></div>
+            <div id="11A" class="mark cross" style="left: calc(39px + 1 * 60px); top: calc(359px + 3 * 57px);"></div>
+            <div id="11B" class="mark cross" style="left: calc(39px + 2 * 60px); top: calc(359px + 3 * 57px);"></div>
+            <div id="11C" class="mark cross" style="left: calc(39px + 3 * 60px); top: calc(359px + 3 * 57px);"></div>
+
+            <div id="1X1" class="mark cross" style="left: 285px; top: calc(359px + 0 * 57px);"></div>
+            <div id="1X2" class="mark cross" style="left: 285px; top: calc(359px + 1 * 57px);"></div>
+            <div id="1X3" class="mark cross" style="left: 285px; top: calc(359px + 2 * 57px);"></div>
+
+            <div id="1x1" class="mark circle" style="left: 285px; top: calc(359px + 0 * 57px);"></div>
+            <div id="1x2" class="mark circle" style="left: 285px; top: calc(359px + 1 * 57px);"></div>
+            <div id="1x3" class="mark circle" style="left: 285px; top: calc(359px + 2 * 57px);"></div>
+            <div id="1F1" class="mark circle" style="left: 285px; top: calc(359px + 3 * 57px);"></div>
+            <div id="1S1" class="mark circle" style="left: calc(39px + 0 * 60px); top: 600px;"></div>
+            <div id="1S2" class="mark circle" style="left: calc(39px + 1 * 60px); top: 600px;"></div>
+            <div id="1S3" class="mark circle" style="left: calc(39px + 2 * 60px); top: 600px;"></div>
+            <div id="1S4" class="mark circle" style="left: calc(39px + 3 * 60px); top: 600px;"></div>
+            <div id="1P2" class="mark circle" style="left: 285px; top: 595px;"></div>
+
+
+            <div id="121" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
+            <div id="122" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
+            <div id="123" class="mark cross" style="left: calc(378px + 3 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
+            <div id="124" class="mark cross" style="left: calc(378px + 0 * 60.7px); top: calc(423.5px + 1 * 57px);"></div>
+            <div id="125" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: calc(423.5px + 1 * 57px);"></div>
+            <div id="126" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: calc(423.5px + 1 * 57px);"></div>
+            <div id="127" class="mark cross" style="left: calc(378px + 3 * 60.7px); top: calc(423.5px + 1 * 57px);"></div>
+            <div id="128" class="mark cross" style="left: calc(378px + 0 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
+            <div id="129" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
+            <div id="12A" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
+            <div id="12B" class="mark cross" style="left: calc(378px + 3 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
+
+            <div id="131" class="mark cross" style="left: calc(91px + 0 * 52.9px); top: 702.5px;"></div>
+            <div id="132" class="mark cross" style="left: calc(91px + 1 * 52.9px); top: 702.5px;"></div>
+            <div id="133" class="mark cross" style="left: calc(91px + 2 * 52.9px); top: 702.5px;"></div>
+            <div id="134" class="mark cross" style="left: calc(91px + 3 * 52.9px); top: 702.5px;"></div>
+            <div id="135" class="mark cross" style="left: calc(91px + 4 * 52.9px); top: 702.5px;"></div>
+            <div id="136" class="mark cross" style="left: calc(91px + 5 * 52.9px); top: 702.5px;"></div>
+            <div id="137" class="mark cross" style="left: calc(91px + 6 * 52.9px); top: 702.5px;"></div>
+            <div id="138" class="mark cross" style="left: calc(91px + 7 * 52.9px); top: 702.5px;"></div>
+            <div id="139" class="mark cross" style="left: calc(91px + 8 * 52.9px); top: 702.5px;"></div>
+            <div id="13A" class="mark cross" style="left: calc(91px + 9 * 52.9px); top: 702.5px;"></div>
+            <div id="13B" class="mark cross" style="left: calc(91px + 10 * 52.9px); top: 702.5px;"></div>
+
+            <div id="141" class="mark" style="left: calc(91px + 0 * 52.9px); top: 803px;"></div>
+            <div id="142" class="mark" style="left: calc(91px + 1 * 52.9px); top: 803px;"></div>
+            <div id="143" class="mark" style="left: calc(91px + 2 * 52.9px); top: 803px;"></div>
+            <div id="144" class="mark" style="left: calc(91px + 3 * 52.9px); top: 803px;"></div>
+            <div id="145" class="mark" style="left: calc(91px + 4 * 52.9px); top: 803px;"></div>
+            <div id="146" class="mark" style="left: calc(91px + 5 * 52.9px); top: 803px;"></div>
+            <div id="147" class="mark" style="left: calc(91px + 6 * 52.9px); top: 803px;"></div>
+            <div id="148" class="mark" style="left: calc(91px + 7 * 52.9px); top: 803px;"></div>
+            <div id="149" class="mark" style="left: calc(91px + 8 * 52.9px); top: 803px;"></div>
+            <div id="14A" class="mark" style="left: calc(91px + 9 * 52.9px); top: 803px;"></div>
+            <div id="14B" class="mark" style="left: calc(91px + 10 * 52.9px); top: 803px;"></div>
+
+            <div id="151" class="mark" style="left: calc(91px + 0 * 52.9px); top: 902.5px;"></div>
+            <div id="152" class="mark" style="left: calc(91px + 1 * 52.9px); top: 902.5px;"></div>
+            <div id="153" class="mark" style="left: calc(91px + 2 * 52.9px); top: 902.5px;"></div>
+            <div id="154" class="mark" style="left: calc(91px + 3 * 52.9px); top: 902.5px;"></div>
+            <div id="155" class="mark" style="left: calc(91px + 4 * 52.9px); top: 902.5px;"></div>
+            <div id="156" class="mark" style="left: calc(91px + 5 * 52.9px); top: 902.5px;"></div>
+            <div id="157" class="mark" style="left: calc(91px + 6 * 52.9px); top: 902.5px;"></div>
+            <div id="158" class="mark" style="left: calc(91px + 7 * 52.9px); top: 902.5px;"></div>
+            <div id="159" class="mark" style="left: calc(91px + 8 * 52.9px); top: 902.5px;"></div>
+            <div id="15A" class="mark" style="left: calc(91px + 9 * 52.9px); top: 902.5px;"></div>
+            <div id="15B" class="mark" style="left: calc(91px + 10 * 52.9px); top: 902.5px;"></div>
+        </div>
+    </div>
+
+
+    <script>
+        function scaleContainer() {
+            const sliderValue = document.getElementById('scale-slider').value;
+            const container = document.getElementById('image-container');
+            const image = document.getElementById('resizable-image');
+            const baseScale = Math.min(container.parentElement.clientHeight / 1000, container.parentElement.clientWidth / 700);
+
+            container.style.transform = `translate(-50%, -50%) scale(${sliderValue / 100 * baseScale})`;
+        }
+        const container = document.querySelector('#image-container');
+        const markElements = container.querySelectorAll('.mark');
+
+
+        const state = {
+            marked: {},
+            log: [],
+        }
+        function prevId(id) {
+            const [b, t, i] = id;
+            if (i === "1") return undefined;
+            return b + t + (parseInt(i, 36) - 1).toString(36).toUpperCase();
+        }
+        function prevMarked(id) {
+            const prev = prevId(id);
+            return !prev || prev in state.marked;
+        }
+        function tryMark(id, ...deps) {
+            if (deps.every(d => d in state.marked)) state.marked[id] = true;
+        }
+        function countType(t) {
+            return Object.keys(state.marked).reduce((a, id) => a + (id[1] === t ?  1 : 0), 0);
+        }
+        const board = {
+            canMark: (id) => {
+                if (id in state.marked) return false;
+                const [b, t, i] = id;
+                if (t === 'R') return id.toLowerCase() in state.marked;
+                if (t === 'r') return prevMarked(id.toUpperCase());
+                if (t === 'A' || t === 'B') return id.toLowerCase() in state.marked && prevMarked(id);
+                if (t === '3' || t === '4' || t === '5') return prevMarked(id);
+                if (t === '1' || t === '2') return true;
+                if (t === 'X') return id.toLowerCase() in state.marked;
+                return false;
+            },
+            markAsValue: (id) => id[1] === '4' || id[1] === '5',
+            allowValue: (id, val) => {
+                if (id[1] !== '5') return true;
+                const prev = prevId(id);
+                if (!prev) return true;
+                return state.marked[prev] === 6 || state.marked[prev] < val;
+            },
+            writeValue: (id, val) => (({ '144':2, '147':2, '149':2, '14B':3 })[id] || 1) * val,
+            score: () => {
+                let yellowScore = 0;
+                if ('1S1' in state.marked) yellowScore += 10;
+                if ('1S2' in state.marked) yellowScore += 14;
+                if ('1S3' in state.marked) yellowScore += 16;
+                if ('1S4' in state.marked) yellowScore += 20;
+                const blueCount = countType('2');
+                const blueScore = blueCount ? 1 + blueCount * (blueCount - 1) / 2 : 0;
+                return [yellowScore, blueScore];
+            },
+            autoMark: () => {
+                // Round track
+                tryMark('1O1', '1r1');
+                tryMark('1P1', '1r2');
+                tryMark('1O2', '1r3');
+                // Yellow
+                tryMark('1S1', '111', '114', '117');
+                tryMark('1S2', '112', '115', '11A');
+                tryMark('1S3', '113', '118', '11B');
+                tryMark('1S4', '116', '119', '11C');
+                tryMark('1P2', '111', '115', '118', '11C');
+                tryMark('1x1', '111', '112', '113');
+                tryMark('1x2', '114', '115', '116');
+                tryMark('1x3', '117', '118', '119');
+                tryMark('1F1', '11A', '11B', '11C');
+                const bonusA = countType('O');
+                const bonusB = countType('P');
+                for (let i = 1; i <= bonusA; i++) state.marked['1a'+i] = true;
+                for (let i = 1; i <= bonusB; i++) state.marked['1b'+i] = true;
+            }
+        }
+        function updateBoard() {
+            board.autoMark();
+            console.log(board.score())
+        markElements.forEach(function(element) {
+            if (board.markAsValue(element.id)) element.innerText = state.marked[element.id] ? board.writeValue(element.id, state.marked[element.id]).toString() : "";
+            const canMark = board.canMark(element.id);
+            element.style.zIndex = canMark ? 1 : 0;
+            element.onclick = !canMark ? undefined : (ev) => {
+                const id = ev.target.id;
+                // console.log('Clicked', id);
+                state.log.push(id);
+                state.marked[id] = board.markAsValue(id) ? parseInt(prompt("Choose", "6")) : true;
+                updateBoard();
+            }
+            element.style.cursor = canMark ? 'pointer' : undefined;
+            if (state.marked[element.id]) element.classList.add('marked');// else element.classList.remove('marked');
+        });
+        }
+        scaleContainer();
+        updateBoard();
+        window.addEventListener("resize", scaleContainer);
+    </script>
+</body>
+</html>

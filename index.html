@@ -17,11 +17,14 @@
             height: 100vh;
             flex-direction: column;
             user-select: none;
+            font-family: sans-serif;
+            flex-direction: column;
         }
 
         #outer-container {
             position: relative;
             overflow: hidden;
+            flex-grow: 1;
         }
 
         #image-container {
@@ -32,7 +35,7 @@
             left: 50%;
             top: 50%;
             transform-origin: center;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -100%);
         }
 
         img {
@@ -64,21 +67,190 @@
             background-size: 100%;
             background-repeat: no-repeat;
         }
-
-        .x-sign {
+        #resizable-image {
             position: absolute;
-            color: white;
-            font-size: 20px;
-            line-height: 1;
-            text-align: center;
         }
+        #dice-modal {
+            position: absolute;
+            display: none;
+            font-family: 'numbers';
+            color: #333;
+            font-size: 38px;
+            line-height: 38px;
+            background-color: #777;
+            border: 5px solid white;
+            border-radius: 10px;
+            transform: translate(-50%, -100%);
+            z-index: 2;
+        }
+        .dice-value {
+            display: block;
+            width: 35px;
+            height: 35px;
+            border: 3px solid black;
+            border-radius: 10px;
+            text-align: center;
+            background-color: white;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #score-modal {
+            position: absolute;
+            width: 415px;
+            gap: 10px 15px;
+            flex-wrap: wrap;
+            font-family: 'numbers';
+            color: #333;
+            font-size: 38px;
+            line-height: 38px;
+            background-color: #fff;
+            border: 7px solid #ddd;
+            border-radius: 13px;
+            z-index: 2;
+            padding: 10px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        #score-modal > div {
+            box-sizing: border-box;
+            width: 200px;
+            height: 80px;
+            border-radius: 13px;
+            font-family: numbers;
+            text-align: center;
+            font-size: 55px;
+            line-height: 80px;
+        }
+        #score-modal > div.score-points { border-width: 7px; border-style: solid; background-color: transparent; line-height: 66px;}
+        #menu-bar {
+            color:yellow;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            height: 30px;
+            font-size: 25px;
+            line-height: 30px;
+        }
+        #menu-bar > input {
+            width: 50%;
+        }
+        #menu-bar > .menu-mode-1 { display: none }
+        #menu-bar.menu-mode-1 > .menu-mode-1 {display: block}
+        #menu-bar.menu-mode-1 > .menu-mode-0 {display: none}
+        .board1 div.color1 { background-color: #ffd503; border-color: #ffd503 }
+        .board1 div.color2 { background-color: #0b7cc1; border-color: #0b7cc1 }
+        .board1 div.color3 { background-color: #0baf4d; border-color: #0baf4d }
+        .board1 div.color4 { background-color: #f58220; border-color: #f58220 }
+        .board1 div.color5 { background-color: #522f91; border-color: #522f91 }
+
+        .board2 div.color1 { background-color: #939598; border-color: #939598 }
+        .board2 div.color2 { background-color: #ffc20e; border-color: #ffc20e }
+        .board2 div.color3 { background-color: #0c4da2; border-color: #0c4da2 }
+        .board2 div.color4 { background-color: #8dc63f; border-color: #8dc63f }
+        .board2 div.color5 { background-color: #f287b7; border-color: #f287b7 }
+
+        .board3 div.color1 { background-color: #ffbd00; border-color: #ffbd00 }
+        .board3 div.color2 { background-color: #00a4a2; border-color: #00a4a2 }
+        .board3 div.color3 { background-color: #002498; border-color: #002498 }
+        .board3 div.color4 { background-color: #ba7b47; border-color: #ba7b47 }
+        .board3 div.color5 { background-color: #ff56ad; border-color: #ff56ad }
+
+        .board4 div.color1 { background-color: #ffbd00; border-color: #ffbd00 }
+        .board4 div.color2 { background-color: #00aae2; border-color: #00aae2 }
+        .board4 div.color3 { background-color: #b0b2b4; border-color: #b0b2b4 }
+        .board4 div.color4 { background-color: #72ca36; border-color: #72ca36 }
+        .board4 div.color5 { background-color: #ff84c0; border-color: #ff84c0 }
     </style>
 </head>
 <body>
-    <input type="range" id="scale-slider" value="100" min="30" max="100" step="1" oninput="scaleContainer()">
+    <div id="menu-bar">
+        <div class="menu-mode-0" id="menu-score">SCORE</div>
+        <div class="menu-mode-0" id="menu-undo">UNDO</div>
+        <div class="menu-mode-0" id="menu-scale">ZOOM</div>
+        <div class="menu-mode-0" id="menu-reset">RESET</div>
+        <div class="menu-mode-1" id="menu-scale-close">BACK</div>
+        <input class="menu-mode-1" type="range" id="scale-slider" value="100" min="30" max="100" step="1" oninput="scaleContainer()">
+    </div>
     <div id="outer-container">
         <div id="image-container">
             <img id="resizable-image" src="back1.png" alt="Resizable Image">
+<div id="score-modal" style="display:none;" class="board1">
+<div class="color1">
+    <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-65.881249,-111.125)">
+     <path d="m 0,0 -0.897,-0.641 -0.497,0.985 -1.093,-0.151 0.018,1.103 -1.037,0.374 0.528,0.969 -0.745,0.814 0.918,0.611 -0.282,1.067 1.098,0.115 0.246,1.075 L -0.718,5.913 0,6.751 0.718,5.913 1.743,6.321 1.99,5.246 3.087,5.131 2.806,4.064 3.723,3.453 2.979,2.639 3.507,1.67 2.469,1.296 2.487,0.193 1.395,0.344 0.897,-0.641 Z"
+        style="fill-opacity:0;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.426;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+        transform="matrix(0.35277776,0,0,-0.35277776,70.395536,114.00836)"/>
+   </g></svg>
+ </div>
+<div id="score1" class="color1 score-points">456</div>
+<div class="color2">
+    <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-65.881249,-111.125)">
+     <path d="m 0,0 -0.897,-0.641 -0.497,0.985 -1.093,-0.151 0.018,1.103 -1.037,0.374 0.528,0.969 -0.745,0.814 0.918,0.611 -0.282,1.067 1.098,0.115 0.246,1.075 L -0.718,5.913 0,6.751 0.718,5.913 1.743,6.321 1.99,5.246 3.087,5.131 2.806,4.064 3.723,3.453 2.979,2.639 3.507,1.67 2.469,1.296 2.487,0.193 1.395,0.344 0.897,-0.641 Z"
+        style="fill-opacity:0;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.426;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+        transform="matrix(0.35277776,0,0,-0.35277776,70.395536,114.00836)"/>
+   </g></svg>
+ </div>
+<div id="score2" class="color2 score-points">456</div>
+<div class="color3">
+    <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-65.881249,-111.125)">
+     <path d="m 0,0 -0.897,-0.641 -0.497,0.985 -1.093,-0.151 0.018,1.103 -1.037,0.374 0.528,0.969 -0.745,0.814 0.918,0.611 -0.282,1.067 1.098,0.115 0.246,1.075 L -0.718,5.913 0,6.751 0.718,5.913 1.743,6.321 1.99,5.246 3.087,5.131 2.806,4.064 3.723,3.453 2.979,2.639 3.507,1.67 2.469,1.296 2.487,0.193 1.395,0.344 0.897,-0.641 Z"
+        style="fill-opacity:0;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.426;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+        transform="matrix(0.35277776,0,0,-0.35277776,70.395536,114.00836)"/>
+   </g></svg>
+ </div>
+<div id="score3" class="color3 score-points">456</div>
+<div class="color4">
+    <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-65.881249,-111.125)">
+     <path d="m 0,0 -0.897,-0.641 -0.497,0.985 -1.093,-0.151 0.018,1.103 -1.037,0.374 0.528,0.969 -0.745,0.814 0.918,0.611 -0.282,1.067 1.098,0.115 0.246,1.075 L -0.718,5.913 0,6.751 0.718,5.913 1.743,6.321 1.99,5.246 3.087,5.131 2.806,4.064 3.723,3.453 2.979,2.639 3.507,1.67 2.469,1.296 2.487,0.193 1.395,0.344 0.897,-0.641 Z"
+        style="fill-opacity:0;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.426;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+        transform="matrix(0.35277776,0,0,-0.35277776,70.395536,114.00836)"/>
+   </g></svg>
+ </div>
+<div id="score4" class="color4 score-points">456</div>
+<div class="color5">
+    <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-65.881249,-111.125)">
+     <path d="m 0,0 -0.897,-0.641 -0.497,0.985 -1.093,-0.151 0.018,1.103 -1.037,0.374 0.528,0.969 -0.745,0.814 0.918,0.611 -0.282,1.067 1.098,0.115 0.246,1.075 L -0.718,5.913 0,6.751 0.718,5.913 1.743,6.321 1.99,5.246 3.087,5.131 2.806,4.064 3.723,3.453 2.979,2.639 3.507,1.67 2.469,1.296 2.487,0.193 1.395,0.344 0.897,-0.641 Z"
+        style="fill-opacity:0;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.426;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1"
+        transform="matrix(0.35277776,0,0,-0.35277776,70.395536,114.00836)"/>
+   </g></svg>
+ </div>
+<div id="score5" class="color5 score-points">456</div>
+<svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-1.8520818,-12.435417)">
+    <path
+       d="m 0,0 v 6.825 c 0,0.938 -0.768,1.706 -1.706,1.706 h -22.181 c -0.938,0 -1.706,-0.768 -1.706,-1.706 V 0 c 0,-0.938 0.768,-1.706 1.706,-1.706 H -1.706 C -0.768,-1.706 0,-0.938 0,0 m -0.853,0 c 0,-0.47 -0.382,-0.853 -0.853,-0.853 h -22.181 c -0.47,0 -0.853,0.383 -0.853,0.853 v 6.825 c 0,0.47 0.383,0.853 0.853,0.853 h 22.181 c 0.471,0 0.853,-0.383 0.853,-0.853 V 0"
+       style="fill:#ed1c24;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,10.880723,15.444964)"/>
+    <path
+       d="M 0,0 C -0.013,0.017 -0.015,0.032 -0.009,0.053 0.078,0.333 0.15,0.617 0.219,0.902 0.28,1.154 0.339,1.407 0.387,1.662 0.411,1.786 0.436,1.91 0.459,2.035 0.487,2.188 0.512,2.341 0.536,2.496 0.557,2.628 0.575,2.761 0.587,2.895 0.596,2.991 0.607,3.087 0.614,3.183 0.622,3.318 0.657,3.695 0.528,3.78 0.398,3.864 -0.389,3.203 -0.594,3 -0.881,2.715 -1.153,2.417 -1.417,2.113 -1.57,1.937 -1.72,1.758 -1.869,1.579 -1.882,1.563 -1.893,1.56 -1.912,1.567 -2.042,1.616 -2.176,1.654 -2.313,1.677 -2.396,1.691 -2.477,1.706 -2.562,1.709 -2.62,1.711 -2.678,1.716 -2.736,1.715 -2.998,1.713 -3.253,1.662 -3.5,1.576 -3.543,1.561 -3.585,1.545 -3.627,1.527 -3.644,1.52 -3.653,1.523 -3.664,1.537 -3.852,1.769 -4.044,1.996 -4.241,2.22 -4.525,2.542 -5.666,3.849 -5.888,3.672 -6.11,3.494 -5.564,0.073 -5.508,-0.094 -5.513,-0.112 -5.526,-0.125 -5.536,-0.14 -5.912,-0.699 -6.19,-1.304 -6.389,-1.947 c -0.004,-0.01 -0.085,-0.128 -0.014,-0.161 0.071,-0.033 0.119,0.063 0.179,0.094 0.082,0.041 0.163,0.081 0.249,0.113 -0.005,-0.014 -0.18,-0.322 -0.084,-0.348 0.096,-0.026 0.384,0.135 0.568,0.186 0.247,0.07 0.497,0.109 0.753,0.065 0.244,-0.041 0.446,-0.154 0.6,-0.35 0.141,-0.179 0.218,-0.386 0.267,-0.605 0.033,-0.143 0.054,-0.29 0.107,-0.429 0.052,-0.138 0.125,-0.26 0.253,-0.341 0.061,-0.039 0.128,-0.058 0.196,-0.076 0.019,-0.039 0.048,-0.071 0.082,-0.098 0.124,-0.101 0.268,-0.148 0.425,-0.163 0.06,-0.006 0.12,-0.006 0.181,0 0.11,0.009 0.215,0.037 0.312,0.088 0.079,0.041 0.152,0.091 0.195,0.173 0.005,0.002 0.01,0.005 0.015,0.006 0.176,0.035 0.297,0.139 0.38,0.295 0.077,0.143 0.11,0.298 0.141,0.455 0.036,0.185 0.086,0.365 0.177,0.532 0.101,0.185 0.239,0.332 0.43,0.424 0.226,0.112 0.466,0.124 0.711,0.093 0.194,-0.025 0.381,-0.08 0.564,-0.15 C 0.4,-2.184 0.549,-2.307 0.621,-2.269 0.694,-2.23 0.604,-2.111 0.583,-2.033 0.57,-1.988 0.548,-1.947 0.541,-1.901 0.685,-1.961 0.935,-2.16 0.999,-2.128 1.063,-2.097 0.905,-1.801 0.848,-1.641 0.64,-1.056 0.362,-0.507 0,0"
+       style="fill:#ed1c24;fill-opacity:1;fill-rule:nonzero;stroke:#dfdfdf;stroke-width:0.341;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3;stroke-dasharray:none;stroke-opacity:1"
+       transform="matrix(0.35277776,0,0,-0.35277776,7.1618804,14.150268)"/>
+    <path
+       d="m 0,0 c 0.019,-0.189 -0.082,-0.321 -0.213,-0.436 -0.127,-0.111 -0.277,-0.165 -0.445,-0.151 -0.132,0.011 -0.245,0.073 -0.345,0.159 -0.105,0.092 -0.177,0.203 -0.209,0.34 -0.007,0.03 0,0.059 0.006,0.089 0.057,0.16 0.187,0.238 0.337,0.282 0.215,0.063 0.429,0.055 0.635,-0.039 C -0.125,0.194 -0.039,0.119 0,0"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,6.4231293,15.13152)"/>
+    <path
+       d="M 0,0 C -0.282,0.003 -0.508,0.233 -0.506,0.516 -0.504,0.794 -0.273,1.021 0.008,1.02 0.292,1.018 0.518,0.789 0.514,0.505 0.51,0.201 0.262,-0.006 0,0"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,6.6620296,14.638125)"/>
+    <path
+       d="M 0,0 C -0.257,0.001 -0.504,0.233 -0.492,0.528 -0.48,0.807 -0.248,1.027 0.033,1.019 0.302,1.01 0.531,0.8 0.528,0.493 0.526,0.215 0.285,-0.007 0,0"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,5.7486879,14.637913)" />
+</g></svg>
+<div id="score6" style="border: 7px solid #ed1c24; line-height: 66px;">123</div>
+<div style="font-family: sans-serif; font-weight:bold;">Σ</div>
+<div id="score" style="background-color: #d0d0d0;">1230</div>
+</div>
+<div id="dice-modal">
+                <div id="D1" class="dice-value">1</div>
+                <div id="D2" class="dice-value">2</div>
+                <div id="D3" class="dice-value">3</div>
+                <div id="D4" class="dice-value">4</div>
+                <div id="D5" class="dice-value">5</div>
+                <div id="D6" class="dice-value">6</div>
+            </div>
             
             <div id="1r1" class="mark circle" style="left: calc(141.5px + 0 * 96.6px); top: 27px;"></div>
             <div id="1r2" class="mark circle" style="left: calc(141.5px + 1 * 96.6px); top: 27px;"></div>
@@ -93,6 +265,8 @@
             <div id="1R4" class="mark cross" style="left: calc(141.5px + 3 * 96.6px); top: 27px;"></div>
             <div id="1R5" class="mark cross" style="left: calc(141.5px + 4 * 96.6px); top: 27px;"></div>
             <div id="1R6" class="mark cross" style="left: calc(141.5px + 5 * 96.6px); top: 27px;"></div>
+
+            <div id="1X0" class="mark cross" style="left: calc(141.5px + 3 * 96.6px); top: 70px;"></div>
 
             <div id="1a1" class="mark circle" style="left: calc(215px + 0 * 66.3px); top: 150.85px;"></div>
             <div id="1a2" class="mark circle" style="left: calc(215px + 1 * 66.3px); top: 150.85px;"></div>
@@ -153,7 +327,6 @@
             <div id="1S4" class="mark circle" style="left: calc(39px + 3 * 60px); top: 600px;"></div>
             <div id="1P2" class="mark circle" style="left: 285px; top: 595px;"></div>
 
-
             <div id="121" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
             <div id="122" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
             <div id="123" class="mark cross" style="left: calc(378px + 3 * 60.7px); top: calc(423.5px + 0 * 57px);"></div>
@@ -165,6 +338,19 @@
             <div id="129" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
             <div id="12A" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
             <div id="12B" class="mark cross" style="left: calc(378px + 3 * 60.7px); top: calc(423.5px + 2 * 57px);"></div>
+
+            <div id="1X4" class="mark cross" style="left: 626px; top: calc(423.5px + 0 * 57px);"></div>
+            <div id="1X5" class="mark cross" style="left: 626px; top: calc(423.5px + 1 * 57px);"></div>
+            <div id="1X6" class="mark cross" style="left: calc(378px + 1 * 60.7px); top: 603px;"></div>
+            <div id="1X7" class="mark cross" style="left: calc(378px + 2 * 60.7px); top: 603px;"></div>
+
+            <div id="1x4" class="mark circle" style="left: 626px; top: calc(423.5px + 0 * 57px);"></div>
+            <div id="1x5" class="mark circle" style="left: 626px; top: calc(423.5px + 1 * 57px);"></div>
+            <div id="1F2" class="mark circle" style="left: 626px; top: calc(423.5px + 2 * 57px);"></div>
+            <div id="1O3" class="mark circle" style="left: calc(378px + 0 * 60.7px); top: 603px;"></div>
+            <div id="1x6" class="mark circle" style="left: calc(378px + 1 * 60.7px); top: 603px;"></div>
+            <div id="1x7" class="mark circle" style="left: calc(378px + 2 * 60.7px); top: 603px;"></div>
+            <div id="1P3" class="mark circle" style="left: calc(378px + 3 * 60.7px); top: 603px;"></div>
 
             <div id="131" class="mark cross" style="left: calc(91px + 0 * 52.9px); top: 702.5px;"></div>
             <div id="132" class="mark cross" style="left: calc(91px + 1 * 52.9px); top: 702.5px;"></div>
@@ -178,6 +364,9 @@
             <div id="13A" class="mark cross" style="left: calc(91px + 9 * 52.9px); top: 702.5px;"></div>
             <div id="13B" class="mark cross" style="left: calc(91px + 10 * 52.9px); top: 702.5px;"></div>
 
+            <div id="1X8" class="mark cross" style="left: calc(91px + 5 * 52.9px); top: 732px;"></div>
+            <div id="1X9" class="mark cross" style="left: calc(91px + 8 * 52.9px); top: 732px;"></div>
+
             <div id="141" class="mark" style="left: calc(91px + 0 * 52.9px); top: 803px;"></div>
             <div id="142" class="mark" style="left: calc(91px + 1 * 52.9px); top: 803px;"></div>
             <div id="143" class="mark" style="left: calc(91px + 2 * 52.9px); top: 803px;"></div>
@@ -190,6 +379,9 @@
             <div id="14A" class="mark" style="left: calc(91px + 9 * 52.9px); top: 803px;"></div>
             <div id="14B" class="mark" style="left: calc(91px + 10 * 52.9px); top: 803px;"></div>
 
+            <div id="1XA" class="mark cross" style="left: calc(91px + 4 * 52.9px); top: 831px;"></div>
+            <div id="1XB" class="mark cross" style="left: calc(91px + 9 * 52.9px); top: 831px;"></div>
+
             <div id="151" class="mark" style="left: calc(91px + 0 * 52.9px); top: 902.5px;"></div>
             <div id="152" class="mark" style="left: calc(91px + 1 * 52.9px); top: 902.5px;"></div>
             <div id="153" class="mark" style="left: calc(91px + 2 * 52.9px); top: 902.5px;"></div>
@@ -201,6 +393,11 @@
             <div id="159" class="mark" style="left: calc(91px + 8 * 52.9px); top: 902.5px;"></div>
             <div id="15A" class="mark" style="left: calc(91px + 9 * 52.9px); top: 902.5px;"></div>
             <div id="15B" class="mark" style="left: calc(91px + 10 * 52.9px); top: 902.5px;"></div>
+
+            <div id="1XC" class="mark cross" style="left: calc(91px + 3 * 52.9px); top: 931.5px;"></div>
+            <div id="1XD" class="mark cross" style="left: calc(91px + 5 * 52.9px); top: 931.5px;"></div>
+            <div id="1XE" class="mark cross" style="left: calc(91px + 8 * 52.9px); top: 931.5px;"></div>
+            <div id="1XF" class="mark cross" style="left: calc(91px + 9 * 52.9px); top: 931.5px;"></div>
         </div>
     </div>
 
@@ -209,18 +406,45 @@
         function scaleContainer() {
             const sliderValue = document.getElementById('scale-slider').value;
             const container = document.getElementById('image-container');
-            const image = document.getElementById('resizable-image');
             const baseScale = Math.min(container.parentElement.clientHeight / 1000, container.parentElement.clientWidth / 700);
+            console.log(container.parentElement.clientHeight, container.parentElement.clientWidth, baseScale);
 
             container.style.transform = `translate(-50%, -50%) scale(${sliderValue / 100 * baseScale})`;
         }
         const container = document.querySelector('#image-container');
         const markElements = container.querySelectorAll('.mark');
-
+        document.getElementById('menu-score').onclick = document.getElementById('score-modal').onclick = () => {
+            const e = document.getElementById('score-modal');
+            e.style.display = e.style.display == 'none' ? 'flex' : 'none'
+        };
+        document.getElementById('menu-undo').onclick = () => {
+            state.log.pop();
+            replayLog();
+        }
+        document.getElementById('menu-reset').onclick = () => {
+            state.log = [];
+            replayLog();
+        }
+        document.getElementById('menu-scale').onclick = () => {
+            const e = document.getElementById('menu-bar');
+            e.classList.add("menu-mode-1");
+        }
+        document.getElementById('menu-scale-close').onclick = () => {
+            const e = document.getElementById('menu-bar');
+            e.classList.remove("menu-mode-1");
+        }
 
         const state = {
             marked: {},
             log: [],
+        }
+        function replayLog() {
+            state.marked = {};
+            state.log.forEach(v => {
+                state.marked[v.substring(0,3)] = v.length > 3 ? parseInt(v[3]) : true;
+                board.autoMark();
+            });
+            updateBoard();
         }
         function prevId(id) {
             const [b, t, i] = id;
@@ -234,15 +458,33 @@
         function tryMark(id, ...deps) {
             if (deps.every(d => d in state.marked)) state.marked[id] = true;
         }
+        function bonusMark(t1, t2) {
+            const count = countType(t1);
+            for (let i = 1; i <= count; i++) state.marked[t2+i] = true;
+        }
         function countType(t) {
             return Object.keys(state.marked).reduce((a, id) => a + (id[1] === t ?  1 : 0), 0);
         }
+        function sumType(t) {
+            return Object.keys(state.marked).reduce((a, id) => a + (id[1] === t ? board.writeValue(id, state.marked[id]) : 0), 0);
+        }
+        function addFoxScore(...scores) {
+            return [...scores, countType('F') * Math.min(...scores)];
+        }
+        /*
+         TODO:
+          * 2 letter actions log
+          * board selection
+          * other 7 boards
+          * erase mode?
+          * game history
+        */
         const board = {
             canMark: (id) => {
                 if (id in state.marked) return false;
                 const [b, t, i] = id;
                 if (t === 'R') return id.toLowerCase() in state.marked;
-                if (t === 'r') return prevMarked(id.toUpperCase());
+                if (t === 'r') return prevMarked(id);
                 if (t === 'A' || t === 'B') return id.toLowerCase() in state.marked && prevMarked(id);
                 if (t === '3' || t === '4' || t === '5') return prevMarked(id);
                 if (t === '1' || t === '2') return true;
@@ -265,13 +507,23 @@
                 if ('1S4' in state.marked) yellowScore += 20;
                 const blueCount = countType('2');
                 const blueScore = blueCount ? 1 + blueCount * (blueCount - 1) / 2 : 0;
-                return [yellowScore, blueScore];
+                const greenCount = countType('3');
+                const greenScore = greenCount * (greenCount + 1) / 2;
+                const orangeScore = sumType('4');
+                const purpleScore = sumType('5');
+                return addFoxScore(yellowScore, blueScore, greenScore, orangeScore, purpleScore);
             },
             autoMark: () => {
                 // Round track
                 tryMark('1O1', '1r1');
                 tryMark('1P1', '1r2');
                 tryMark('1O2', '1r3');
+                tryMark('1x0', '1r4');
+                tryMark('1R1', '1r2');
+                tryMark('1R2', '1r3');
+                tryMark('1R3', '1r4');
+                tryMark('1R4', '1r5');
+                tryMark('1R5', '1r6');
                 // Yellow
                 tryMark('1S1', '111', '114', '117');
                 tryMark('1S2', '112', '115', '11A');
@@ -282,28 +534,83 @@
                 tryMark('1x2', '114', '115', '116');
                 tryMark('1x3', '117', '118', '119');
                 tryMark('1F1', '11A', '11B', '11C');
-                const bonusA = countType('O');
-                const bonusB = countType('P');
-                for (let i = 1; i <= bonusA; i++) state.marked['1a'+i] = true;
-                for (let i = 1; i <= bonusB; i++) state.marked['1b'+i] = true;
+                // Blue
+                tryMark('1x4', '121', '122', '123');
+                tryMark('1x5', '124', '125', '126', '127');
+                tryMark('1F2', '128', '129', '12A', '12B');
+                tryMark('1O3', '124', '128');
+                tryMark('1x6', '121', '125', '129');
+                tryMark('1x7', '122', '126', '12A');
+                tryMark('1P3', '123', '127', '12B');
+                // Green
+                tryMark('1P4', '134');
+                tryMark('1x8', '136');
+                tryMark('1F3', '137');
+                tryMark('1x9', '139');
+                tryMark('1O4', '13A');
+                // Orange
+                tryMark('1O5', '143');
+                tryMark('1xa', '145');
+                tryMark('1P5', '146');
+                tryMark('1F4', '148');
+                tryMark('1xb', '14A');
+                // Purple
+                tryMark('1O6', '153');
+                tryMark('1xc', '154');
+                tryMark('1P6', '155');
+                tryMark('1xd', '156');
+                tryMark('1F5', '157');
+                tryMark('1O7', '158');
+                tryMark('1xe', '159');
+                tryMark('1xf', '15A');
+                tryMark('1P7', '15B');
+                // Bonus tracks
+                bonusMark('O', '1a');
+                bonusMark('P', '1b');
             }
+        }
+        function setupDiceModal(element, id) {
+            const modal = document.getElementById('dice-modal');
+            modal.style.display = 'flex';
+            const xpos = element.offsetLeft + element.clientWidth/2;
+            modal.style.left = Math.min(Math.max(xpos, 175), 525) + 'px';
+            modal.style.top = (element.offsetTop) + 'px';
+            [1,2,3,4,5,6].forEach(i => {
+                const face = document.getElementById('D'+i);
+                const allowed = board.allowValue(id, i);
+                face.style.display = allowed ? 'block' : 'none';
+                if (allowed) {
+                    face.onclick = () => {
+                        state.marked[id] = i;
+                        state.log.push(id+i);
+                        updateBoard();
+                        modal.style.display = 'none';
+                    }
+                }
+            });
         }
         function updateBoard() {
             board.autoMark();
-            console.log(board.score())
+            const scores = board.score();
+            scores.forEach((v, i) => document.getElementById('score'+(i+1)).innerText = v);
+            document.getElementById('score').innerText = scores.reduce((a, v) => a + v, 0);
         markElements.forEach(function(element) {
             if (board.markAsValue(element.id)) element.innerText = state.marked[element.id] ? board.writeValue(element.id, state.marked[element.id]).toString() : "";
             const canMark = board.canMark(element.id);
             element.style.zIndex = canMark ? 1 : 0;
             element.onclick = !canMark ? undefined : (ev) => {
                 const id = ev.target.id;
-                // console.log('Clicked', id);
-                state.log.push(id);
-                state.marked[id] = board.markAsValue(id) ? parseInt(prompt("Choose", "6")) : true;
-                updateBoard();
+                if (board.markAsValue(id)) {
+                    setupDiceModal(element, id);
+                } else {
+                    document.getElementById('dice-modal').style.display = 'none';
+                    state.log.push(id);
+                    state.marked[id] = true;
+                    updateBoard();
+                }
             }
-            element.style.cursor = canMark ? 'pointer' : undefined;
-            if (state.marked[element.id]) element.classList.add('marked');// else element.classList.remove('marked');
+            element.style.cursor = canMark ? 'pointer' : 'auto';
+            if (state.marked[element.id]) element.classList.add('marked'); else element.classList.remove('marked');
         });
         }
         scaleContainer();

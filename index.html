@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resizable Clickable Image</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="re.png">
+    <title>Clever Score Sheets</title>
     <style>
         @font-face {
             font-family: "numbers";
@@ -16,7 +17,7 @@
             overflow: hidden;
             background-color: black;
             display: flex;
-            height: 100vh;
+            height: 100dvh;
             flex-direction: column;
             user-select: none;
             font-family: sans-serif;
@@ -58,7 +59,7 @@
             width: 35px;
             height: 35px;
             text-align: center;
-            background-color: rgba(0, 0, 0, .3);
+            /* background-color: rgba(0,0,0,.3); */
         }
 
         .circle.marked {
@@ -167,7 +168,7 @@
             background-color: #fff;
             border: 7px solid #ddd;
             border-radius: 13px;
-            z-index: 2;
+            z-index: 3;
             padding: 10px;
             left: 50%;
             top: 50%;
@@ -185,10 +186,11 @@
             line-height: 45px;
             cursor: pointer;
             border: 3px solid black;
+            background-color: #ccc;
         }
 
         #menu-bar {
-            color: yellow;
+            color: #ee9;
             display: flex;
             gap: 30px;
             justify-content: center;
@@ -319,7 +321,7 @@
     <div id="menu-bar">
         <div class="menu-mode-0" id="menu-score">SCORE</div>
         <div class="menu-mode-0" id="menu-undo">UNDO</div>
-        <div class="menu-mode-0" id="menu-scale">ZOOM</div>
+        <div class="menu-mode-0" id="menu-scale">SIZE</div>
         <div class="menu-mode-0" id="menu-reset">RESET</div>
         <div class="menu-mode-1" id="menu-scale-close">BACK</div>
         <input class="menu-mode-1" type="range" id="scale-slider" value="100" min="30" max="100" step="1"
@@ -424,6 +426,7 @@
             const container = document.getElementById('image-container');
             const baseScale = Math.min(container.parentElement.clientHeight / 1000, container.parentElement.clientWidth / getWidth());
             container.style.transform = `translate(-50%, -50%) scale(${sliderValue / 100 * baseScale})`;
+            localStorage.setItem('scale', sliderValue.toString());
         }
         document.getElementById('menu-score').onclick = document.getElementById('score-modal').onclick = () => {
             const e = document.getElementById('score-modal');
@@ -431,11 +434,19 @@
         };
         document.getElementById('menu-undo').onclick = () => {
             state.log.pop();
+            save();
             replayLog();
         }
         document.getElementById('menu-reset').onclick = () => {
             document.getElementById('board-modal').style.display = 'flex'
         }
+        // document.getElementById('menu-fs').onclick = () => {
+        //     if (!document.fullscreenElement) {
+        //         document.documentElement.requestFullscreen();
+        //     } else if (document.exitFullscreen) {
+        //         document.exitFullscreen();
+        //     }
+        // }
         document.getElementById('menu-scale').onclick = () => {
             const e = document.getElementById('menu-bar');
             e.classList.add("menu-mode-1");
@@ -448,6 +459,25 @@
         const state = {
             marked: {},
             log: [],
+        }
+        function save() {
+            localStorage.setItem('state', board.id + state.log.join(''));
+        }
+        function load() {
+            const s = localStorage.getItem('state');
+            if (!s) return;
+            const boardId = s.substring(0, 2);
+            const compactLog = s.substring(2);
+            const b = boards.find(b => b.id === boardId);
+            if (!b) return;
+            board = b;
+            state.log = [];
+            for (let i = 0; i < compactLog.length;) {
+                const len = board.markAsValue(compactLog[i]) ? 3 : 2;
+                state.log.push(compactLog.substring(i, i + len));
+                i += len;
+            }
+            replayLog();
         }
         function replayLog() {
             state.marked = {};
@@ -520,6 +550,7 @@
         }
         let board;
         function buildBoard(b) {
+            document.getElementById('dice-modal').style.display = 'none';
             board = b;
             const container = document.querySelector('#image-container');
             const image = document.querySelector('#resizable-image');
@@ -529,13 +560,15 @@
             container.className = board.colorScheme;
             markElements.forEach(el => el.remove());
             board.buildBoard();
+            scaleContainer();
         }
         function getWidth() {
             return board.width || 700;
         }
         const board1A = {
-            name: 'Clever',
-            image: 'back1.png',
+            id: '1A',
+            name: 'That\'s Pretty Clever!',
+            image: '1A.jpg',
             colorScheme: 'board1',
             buildBoard: (container) => {
                 // Round track
@@ -594,11 +627,7 @@
             allowValue: (id) => id[0] === '4' || id === '51' ? allow1d() : allow1d(val => state.marked[prevId(id)] % 6 < val),
             writeValue: (id, val) => (({ '44': 2, '47': 2, '49': 2, '4B': 3 })[id] || 1) * val,
             score: () => {
-                let yellowScore = 0;
-                if ('S1' in state.marked) yellowScore += 10;
-                if ('S2' in state.marked) yellowScore += 14;
-                if ('S3' in state.marked) yellowScore += 16;
-                if ('S4' in state.marked) yellowScore += 20;
+                const yellowScore = sumType('S', (_, i) => [10, 14, 16, 20][i - 1]);
                 const blueCount = countType('2');
                 const blueScore = blueCount ? 1 + blueCount * (blueCount - 1) / 2 : 0;
                 const greenCount = countType('3');
@@ -664,8 +693,9 @@
             }
         };
         const board1B = {
-            name: 'Clever Challenge I',
-            image: '1B2.png',
+            id: '1b',
+            name: 'Clever: Challenge I',
+            image: '1B.png',
             colorScheme: 'board1',
             buildBoard: (container) => {
                 // Round track
@@ -729,12 +759,8 @@
             allowValue: (id) => id[0] === '4' || id === '51' ? allow1d() : allow1d(val => val === 6 || state.marked[prevId(id)] > val),
             writeValue: (id, val) => (({ '41': -1, '43': 2, '44': 3, '45': -1, '47': 2, '48': 3, '49': -1, '4B': 4 })[id] || 1) * val,
             score: () => {
-                let yellowScore = 0;
-                if ('S1' in state.marked) yellowScore += 20;
-                if ('S2' in state.marked) yellowScore += 16;
-                if ('S3' in state.marked) yellowScore += 22;
-                if ('S4' in state.marked) yellowScore += 12;
-                const blueCount = countType('2');
+                const yellowScore = sumType('S', (_, i) => [20, 16, 22, 12][i - 1]);
+                const blueCount = Math.min(countType('2'), 11);
                 const blueScore = blueCount ? 1 + blueCount * (blueCount - 1) / 2 : 0;
                 const greenCount = countType('3');
                 const greenScore = greenCount * (greenCount + 1) / 2;
@@ -796,12 +822,28 @@
                 tryMark('P7', '5B');
                 // Bonus tracks
                 bonusMark('O', 'a');
-                tryMark('F0', 'a7');
                 bonusMark('P', 'b');
-                tryMark('xh', 'b7');
             }
         };
+        const board1B2 = {
+            ...board1B,
+            id: '1B',
+            name: 'Clever: Challenge I ver. 2',
+            image: '1B2.jpg',
+            autoMark: () => {
+                board1B.autoMark();
+                tryMark('F0', 'a7');
+                tryMark('xh', 'b7');
+            },
+            score: () => {
+                const [yellowScore, _, greenScore, orangeScore, purpleScore] = board1B.score();
+                const blueCount = countType('2');
+                const blueScore = blueCount ? 1 + blueCount * (blueCount - 1) / 2 : 0;
+                return addFoxScore(yellowScore, blueScore, greenScore, orangeScore, purpleScore);
+            },
+        }
         const board1C = {
+            id: '1C',
             name: 'Clever Deluxe',
             image: '1C.jpg',
             width: 830,
@@ -915,7 +957,7 @@
                 [..."12345"].forEach(i => tryMark('s' + i, '1' + i, '2' + i, '3' + i));
                 if (countType('2')) state.marked['y1'] = sumType('2');
                 if (countType('3')) state.marked['y2'] = sumType('3');
-                if (countType('s')) state.marked['y3'] = sumType('s', (v, i) => v ? [10, 10, 15, 15, 20][i - 1] : 0);
+                if (countType('s')) state.marked['y3'] = sumType('s', (v, i) => v ? [10, 15, 15, 20, 20][i - 1] : 0);
                 tryMark('O2', '12');
                 tryMark('x1', '13');
                 tryMark('x2', '14');
@@ -975,6 +1017,7 @@
             }
         }
         const board2A = {
+            id: '2A',
             name: 'Twice as Clever',
             image: '2A.png',
             colorScheme: 'board2',
@@ -1135,7 +1178,8 @@
             }
         };
         const board2B = {
-            name: 'Twice as Clever Challenge I',
+            id: '2B',
+            name: 'Twice as Clever: Challenge I',
             image: '2B.png',
             colorScheme: 'board2',
             buildBoard: (container) => {
@@ -1303,8 +1347,9 @@
             }
         };
         const board3A = {
+            id: '3A',
             name: 'Clever Cubed',
-            image: '3A.png',
+            image: '3A.jpg',
             colorScheme: 'board3',
             buildBoard: (container) => {
                 // Round track (R)
@@ -1489,7 +1534,8 @@
             }
         };
         const board3B = {
-            name: 'Clever Cubed Challenge I',
+            id: '3B',
+            name: 'Clever Cubed: Challenge I',
             image: '3B.png',
             colorScheme: 'board3',
             buildBoard: (container) => {
@@ -1682,6 +1728,7 @@
             }
         };
         const board4A = {
+            id: '4A',
             name: 'Clever 4Ever',
             image: '4A.png',
             colorScheme: 'board4',
@@ -1719,7 +1766,7 @@
                 makeMark('P3', 407.5 + 6 * 38 + 5, 309 + 3 * 38, 'small', 'circle');
                 makeXMark('a', 407.5 + 6 * 38 + 5, 309 + 4 * 38, 'small');
                 makeMark('F2', 407.5 + 6 * 38 + 5, 309 + 5 * 38, 'small', 'circle');
-                makeMark('O2', 407.5 + 6 * 38, 309 + 6 * 38, 'small', 'circle');
+                makeMark('O3', 407.5 + 6 * 38, 309 + 6 * 38, 'small', 'circle');
                 gen('S', 6).forEach(([id, x]) => makeMark(id, 407.5 + x * 38, 309 + 6 * 38 + 5, 'circle', 'small'));
                 makeMark('S0', 407.5 - 33, 309 + 6 * 38, 'circle', 'small');
                 // Gray (tuvw)
@@ -1770,7 +1817,7 @@
             },
             writeValue: (id, val) => val,
             score: () => {
-                const yellowScore = -sumType('1') + sumType('2') + (state.marked['y3'] || 0);
+                const yellowScore = -sumType('2') + sumType('3') + (state.marked['y3'] || 0);
                 const blueScore = sumType('S', (v, i) => i + 6);
                 const greyScore = [1, 2, 3, 4, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11].reduce((a, v, i) => a + (
                     [..."tuvw"].every(t => makeId(t, i + 1) in state.marked) ? v : 0
@@ -1791,6 +1838,10 @@
                 tryMark('R4', 'r5');
                 tryMark('R5', 'r6');
                 // Yellow
+                [..."12345"].forEach(i => tryMark('s' + i, '1' + i, '2' + i, '3' + i));
+                if (countType('2')) state.marked['y1'] = sumType('2');
+                if (countType('3')) state.marked['y2'] = sumType('3');
+                if (countType('s')) state.marked['y3'] = sumType('s', (v, i) => v ? [10, 10, 15, 15, 20][i - 1] : 0);
                 tryMark('Q2', '12');
                 tryMark('x2', '13');
                 tryMark('x3', '14');
@@ -1874,7 +1925,8 @@
         };
 
         const board4B = {
-            name: 'Clever 4Ever Challenge I',
+            id: '4B',
+            name: 'Clever 4Ever: Challenge I',
             image: '4B.png',
             colorScheme: 'board4',
             buildBoard: (container) => {
@@ -1904,20 +1956,20 @@
                 makeMark('X6', 63 + 3 * 47, 373 + 2 * 70, 'small', 'cross');
                 // Blue (4S)
                 gen('40', 6, 6).forEach(([id, x, y]) => makeMark(id, 404 + x * 38, 313 + y * 38, 'cross', 'small'));
-                makeMark('S2', 404 + 6 * 38 + 5, 313 + 0 * 38, 'small', 'circle')
+                makeMark('S1', 404 + 6 * 38 + 5, 313 + 0 * 38, 'small', 'circle')
                 makeXMark('7', 404 + 6 * 38 + 5, 313 + 1 * 38, 'small')
-                makeMark('S4', 404 + 6 * 38 + 5, 313 + 2 * 38, 'small', 'circle')
+                makeMark('S3', 404 + 6 * 38 + 5, 313 + 2 * 38, 'small', 'circle')
                 makeXMark('8', 404 + 6 * 38 + 5, 313 + 3 * 38, 'small')
-                makeMark('S6', 404 + 6 * 38 + 5, 313 + 4 * 38, 'small', 'circle')
+                makeMark('S5', 404 + 6 * 38 + 5, 313 + 4 * 38, 'small', 'circle')
                 makeXMark('9', 404 + 6 * 38 + 5, 313 + 5 * 38, 'small')
                 makeXMark('a', 404 + 6 * 38 - 2, 313 + 6 * 38 - 2, 'small')
                 makeMark('O3', 404 + 0 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
-                makeMark('S3', 404 + 1 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
+                makeMark('S2', 404 + 1 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
                 makeMark('P3', 404 + 2 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
-                makeMark('S5', 404 + 3 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
+                makeMark('S4', 404 + 3 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
                 makeMark('F2', 404 + 4 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
-                makeMark('S7', 404 + 5 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
-                makeMark('S1', 404 - 34, 313 + 6 * 38 - 3, 'circle', 'small');
+                makeMark('S6', 404 + 5 * 38, 313 + 6 * 38 + 5, 'circle', 'small');
+                makeMark('S0', 404 - 34, 313 + 6 * 38 - 3, 'circle', 'small');
                 // Gray (tuvw)
                 [0, 1, 2, 3].forEach(y =>
                     gen("tuvw"[y], 19).forEach(([id, x]) => {
@@ -2004,19 +2056,19 @@
                 const cols = [0, 1, 2, 3, 4, 5].map(i => [0, 1, 2, 3, 4, 5].filter(j => makeId('4', j * 6 + i) in state.marked).length);
                 const diags = [0, 1].map(d => [0, 1, 2, 3, 4, 5].filter(i => makeId('4', i * 6 + (d ? 5 - i : i)) in state.marked).length);
                 diags[1] > 1 && (state.marked['S0'] = true);
-                cols[0] > 1 && (state.marked['S1'] = true);
-                cols[1] > 1 && (state.marked['x7'] = true);
-                cols[2] > 1 && (state.marked['S3'] = true);
-                cols[3] > 1 && (state.marked['x8'] = true);
-                cols[4] > 1 && (state.marked['S5'] = true);
-                cols[5] > 1 && (state.marked['x9'] = true);
+                rows[0] > 1 && (state.marked['S1'] = true);
+                rows[1] > 1 && (state.marked['x7'] = true);
+                rows[2] > 1 && (state.marked['S3'] = true);
+                rows[3] > 1 && (state.marked['x8'] = true);
+                rows[4] > 1 && (state.marked['S5'] = true);
+                rows[5] > 1 && (state.marked['x9'] = true);
                 diags[0] > 1 && (state.marked['xa'] = true);
-                rows[0] > 1 && (state.marked['O3'] = true);
-                rows[1] > 1 && (state.marked['S2'] = true);
-                rows[2] > 1 && (state.marked['P3'] = true);
-                rows[3] > 1 && (state.marked['S4'] = true);
-                rows[4] > 1 && (state.marked['F2'] = true);
-                rows[5] > 1 && (state.marked['S6'] = true);
+                cols[0] > 1 && (state.marked['O3'] = true);
+                cols[1] > 1 && (state.marked['S2'] = true);
+                cols[2] > 1 && (state.marked['P3'] = true);
+                cols[3] > 1 && (state.marked['S4'] = true);
+                cols[4] > 1 && (state.marked['F2'] = true);
+                cols[5] > 1 && (state.marked['S6'] = true);
                 [...rows, ...cols, ...diags].forEach((v, i) => v > 2 && (state.marked[makeId('z', i)] = true));
                 // Grey
                 tryMarkAll('v1', 'u1', 'u2', 't2'); // L
@@ -2082,7 +2134,7 @@
                 tryMark('x1', 'a7');
             }
         };
-        const boards = [board1A, board1B, board2A, board2B, board3A, board3B, board4A, board4B, board1C];
+        const boards = [board1A, board1B, board1B2, board2A, board2B, board3A, board3B, board4A, board4B, board1C];
 
 
         function allow1d(fn) { return fn ? [1, 2, 3, 4, 5, 6].filter(fn) : [1, 2, 3, 4, 5, 6] }
@@ -2099,6 +2151,7 @@
                 face.onclick = () => {
                     state.marked[id] = board.writeValue(id, i);
                     state.log.push(id + i.toString(36));
+                    save();
                     updateBoard();
                     modal.style.display = 'none';
                 }
@@ -2127,6 +2180,7 @@
                     } else {
                         document.getElementById('dice-modal').style.display = 'none';
                         state.log.push(id);
+                        save();
                         state.marked[id] = true;
                         updateBoard();
                     }
@@ -2138,17 +2192,33 @@
         boards.forEach(b => {
             const e = document.createElement('div');
             e.textContent = b.name;
+            e.style.backgroundColor = {
+                "board1": '#ffd503',
+                "board2": '#939598',
+                "board3": '#ff56ad',
+                "board4": '#00aae2',
+            }[b.colorScheme];
             e.onclick = () => {
                 buildBoard(b);
                 state.log = [];
+                save();
                 replayLog();
                 updateBoard();
                 document.getElementById('board-modal').style.display = 'none';
             }
             document.getElementById('board-modal').append(e);
         })
-        buildBoard(board1B);
-        scaleContainer();
+        board = board1A;
+        load();
+        {
+            const e = document.createElement('div');
+            e.textContent = 'Back';
+            e.onclick = () => document.getElementById('board-modal').style.display = 'none';
+            document.getElementById('board-modal').append(e);
+        }
+        document.getElementById('scale-slider').value = parseFloat(localStorage.getItem('scale') || '100') || 100;
+        if (!state.log.length) document.getElementById('board-modal').style.display = 'flex';
+        buildBoard(board);
         updateBoard();
         window.addEventListener("resize", scaleContainer);
     </script>

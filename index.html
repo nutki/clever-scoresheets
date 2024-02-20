@@ -456,10 +456,27 @@
                 <path
                     d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400ZM280-540v-80h200v80H280Z" />
             </svg></div>
+        <div class="menu-mode-0" id="menu-fs">
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" id="icon-fs"
+                style="fill:#fff">
+                <path
+                    d="M120-120v-200h80v120h120v80H120Zm520 0v-80h120v-120h80v200H640ZM120-640v-200h200v80H200v120h-80Zm640 0v-120H640v-80h200v200h-80Z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" id="icon-fs-exit"
+                style="fill:#fff;display:none">
+                <path
+                    d="M240-120v-120H120v-80h200v200h-80Zm400 0v-200h200v80H720v120h-80ZM120-640v-80h120v-120h80v200H120Zm520 0v-200h80v120h120v80H640Z" />
+            </svg>
+        </div>
         <div class="menu-mode-0 menu-mode-2" id="menu-reset"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30" style="fill:#fff">
                 <path
                     d="M200-120q-33 0-56.5-23.5T120-200v-160h80v160h560v-560H200v160h-80v-160q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm220-160-56-58 102-102H120v-80h346L364-622l56-58 200 200-200 200Z" />
+            </svg></div>
+        <div class="menu-mode-2" id="menu-delete"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path
+                    d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
             </svg></div>
         <div class="menu-mode-1" id="menu-scale-close"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30" style="fill:#fff">
@@ -601,7 +618,7 @@
         document.getElementById('menu-history-prev').onclick = () => historyBrowser.prev();
         document.getElementById('menu-history-next').onclick = () => historyBrowser.next();
         document.getElementById('menu-reset').onclick = () => {
-            document.getElementById(historyMode ? 'history-modal' : 'board-modal').style.display = 'flex'
+            document.getElementById(historyMode ? 'history-modal' : 'board-modal').style.display = 'flex';
             document.getElementById('score-modal').style.display = 'none';
         }
         document.getElementById('history-exit').onclick = () => {
@@ -614,34 +631,53 @@
             document.getElementById('history-by-date').style.display = 'none';
             document.getElementById('history-by-score').style.display = 'block';
             historyOrder = 'date';
+            historyBrowser.updateEntries();
             updateBoard()
         }
         document.getElementById('history-by-score').onclick = () => {
             document.getElementById('history-by-score').style.display = 'none';
             document.getElementById('history-by-date').style.display = 'block';
             historyOrder = 'score';
+            historyBrowser.updateEntries();
             updateBoard()
         }
         document.getElementById('history-show-incomplete').onclick = () => {
             document.getElementById('history-show-incomplete').style.display = 'none';
             document.getElementById('history-hide-incomplete').style.display = 'block';
             historyFilterIncomplete = false;
+            historyBrowser.updateEntries();
             updateBoard()
         }
         document.getElementById('history-hide-incomplete').onclick = () => {
             document.getElementById('history-hide-incomplete').style.display = 'none';
             document.getElementById('history-show-incomplete').style.display = 'block';
             historyFilterIncomplete = true;
+            historyBrowser.updateEntries();
             updateBoard()
         }
-        document.getElementById('history-board-select').onchange = () => updateBoard();
-        // document.getElementById('menu-fs').onclick = () => {
-        //     if (!document.fullscreenElement) {
-        //         document.documentElement.requestFullscreen();
-        //     } else if (document.exitFullscreen) {
-        //         document.exitFullscreen();
-        //     }
-        // }
+        document.getElementById('history-board-select').onchange = () => {
+            historyBrowser.updateEntries();
+            updateBoard();
+        }
+        document.getElementById('menu-delete').onclick = () => {
+            historyBrowser.remove();
+            if (!historyBrowser.entries().length) {
+                document.getElementById('history-modal').style.display = 'flex';
+                document.getElementById('score-modal').style.display = 'none';
+                updateBoard();
+            }
+        }
+        document.getElementById('menu-fs').onclick = () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('icon-fs-exit').style.display = 'block';
+                document.getElementById('icon-fs').style.display = 'none';
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+                document.getElementById('icon-fs').style.display = 'block';
+                document.getElementById('icon-fs-exit').style.display = 'none';
+            }
+        }
         document.getElementById('menu-scale').onclick = () => {
             const e = document.getElementById('menu-bar');
             e.className = 'menu-mode-1';
@@ -672,6 +708,7 @@
         function logAppend(v) {
             state.log.splice(state.logPos++, Infinity, v);
             save();
+            historySaved = false;
         }
         function logSetPos(pos) {
             if (pos < 0 || pos > state.log.length) return;
@@ -2426,16 +2463,10 @@
                 if (id in state.marked) element.classList.add('marked'); else element.classList.remove('marked');
             });
             if (historyMode) {
-                const usedBoards = new Set();
                 document.getElementById('history-modal-list').innerHTML = '';
-                let historyEnties = historyBrowser.asList();
-                historyEnties.reverse();
-                if (historyFilterIncomplete) historyEnties = historyEnties.filter(e => !e.incomplete);
-                historyEnties.forEach(e => usedBoards.add(e.board.id));
-                const boardFilter = document.getElementById('history-board-select').value;
-                if (boardFilter) historyEnties = historyEnties.filter(e => e.board.id === boardFilter);
-                if (historyOrder === 'score') historyEnties.sort((a, b) => b.score - a.score);
-                historyEnties.forEach(({ date, score, board, idx }) => {
+                const usedBoards = historyBrowser.usedBoards();
+                const historyEnties = historyBrowser.entries();
+                historyEnties.forEach(({ date, score, board }, idx) => {
                     const entryDiv = document.createElement('div');
                     const dateDiv = document.createElement('div');
                     dateDiv.textContent = date;
@@ -2450,6 +2481,7 @@
                     }
                     document.getElementById('history-modal-list').append(entryDiv);
                 })
+                const boardFilter = document.getElementById('history-board-select').value;
                 document.getElementById('history-board-select').innerHTML = '';
                 const option = document.createElement('option');
                 option.value = "";
@@ -2476,38 +2508,59 @@
         let historyFilterIncomplete = true;
         let historyOrder = 'date';
         let historyMode = false;
+        let historySaved = false;
         const historyBrowser = (() => {
             const history = JSON.parse(localStorage.getItem('history') || '[]');
-            let currentIdx = history.length - 1;
-            const toEntry = ({ b, s, t, i }, idx) => ({
+            let historyEntries;
+            let currentIdx;
+            let usedBoards;
+            const toEntry = ({ l, b, s, t, i }, idx) => ({
                 board: boards.find(board => board.id === b),
                 date: new Date(t * 1000).toLocaleDateString(),
                 incomplete: !!i,
                 score: s,
+                log: l,
                 idx,
             });
             const load = (i = currentIdx) => {
-                if (i < 0 || i >= history.length) return;
+                if (i < 0 || i >= historyEntries.length) return;
                 currentIdx = i;
-                const current = history[currentIdx];
-                const currentEntry = toEntry(current);
+                const currentEntry = historyEntries[currentIdx];
                 buildBoard(currentEntry.board);
-                logFromString(current.l);
+                logFromString(currentEntry.log);
                 return currentEntry;
             };
+            const updateEntries = () => {
+                usedBoards = new Set();
+                historyEntries = history.map(toEntry);
+                historyEntries.reverse();
+                if (historyFilterIncomplete) historyEntries = historyEntries.filter(e => !e.incomplete);
+                historyEntries.forEach(e => usedBoards.add(e.board.id));
+                const boardFilter = document.getElementById('history-board-select').value;
+                if (boardFilter) historyEntries = historyEntries.filter(e => e.board.id === boardFilter);
+                if (historyOrder === 'score') historyEntries.sort((a, b) => b.score - a.score);
+                currentIdx = 0;
+            }
+            updateEntries();
             return {
-                asList: () => history.map(toEntry),
+                updateEntries,
+                entries: () => historyEntries,
+                usedBoards: () => usedBoards,
                 load,
-                hasNext: () => currentIdx < history.length - 1,
+                hasNext: () => currentIdx < historyEntries.length - 1,
                 hasPrev: () => currentIdx > 0,
                 remove: (i = currentIdx) => {
-                    history.splice(i, 1);
-                    if (i >= currentIdx) currentIdx--;
+                    if (i < 0 || i >= historyEntries.length) return;
+                    history.splice(historyEntries[i].idx, 1);
+                    localStorage.setItem('history', JSON.stringify(history));
+                    historyEntries.splice(i, 1);
+                    if (i > currentIdx) currentIdx--;
+                    if (i >= historyEntries.length) currentIdx = historyEntries.length - 1;
                     load();
                 },
                 next: () => load(currentIdx + 1),
                 prev: () => load(currentIdx - 1),
-                current: () => currentIdx < 0 ? {} : toEntry(history[currentIdx]),
+                current: () => currentIdx < 0 ? {} : historyEntries[currentIdx],
                 save: () => {
                     history.push({
                         b: board.id,
@@ -2517,10 +2570,18 @@
                         i: logIncomplete() ? 1 : undefined,
                     })
                     if (history.length > 1000) history.splice(0, history.length - 1000);
+                    updateEntries();
                     localStorage.setItem('history', JSON.stringify(history));
                 }
             }
         })();
+        function maybeSaveHistory() {
+            if (historySaved) return;
+            historySaved = true;
+            if (logEmpty()) return;
+            historyBrowser.save();
+            localStorage.removeItem('state');
+        }
         boards.forEach(b => {
             const e = document.createElement('div');
             e.textContent = b.name;
@@ -2531,7 +2592,7 @@
                 "board4": '#00aae2',
             }[b.colorScheme];
             e.onclick = () => {
-                if (!logEmpty()) historyBrowser.save();
+                maybeSaveHistory();
                 buildBoard(b);
                 logClear();
                 updateBoard();
@@ -2539,9 +2600,12 @@
             }
             document.getElementById('board-modal-list').append(e);
         })
+        board = board1A;
+        updateBoard();
         load();
         document.getElementById('board-back').onclick = () => document.getElementById('board-modal').style.display = 'none';
         document.getElementById('board-history').onclick = () => {
+            maybeSaveHistory();
             document.getElementById('board-modal').style.display = 'none';
             document.getElementById('history-modal').style.display = 'flex';
             historyMode = true;
@@ -2549,7 +2613,6 @@
         }
         document.getElementById('scale-slider').value = parseFloat(localStorage.getItem('scale') || '100') || 100;
         if (logEmpty()) document.getElementById(historyMode ? 'history-modal' : 'board-modal').style.display = 'flex';
-        updateBoard();
         window.addEventListener("resize", scaleContainer);
     </script>
 </body>

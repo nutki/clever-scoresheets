@@ -1299,6 +1299,200 @@
                 tryMark('x1', 'c6');
             }
         };
+        const board3B = {
+            image: '3B.png',
+            colorScheme: 'board3',
+            buildBoard: (container) => {
+                // Round track (R)
+                gen('r', 6).forEach(([id, x]) => makeMark(id, 198.5 + x * 85, 30, 'circle'));
+                gen('R', 6).forEach(([id, x]) => makeMark(id, 198.5 + x * 85, 30, 'cross'));
+                makeMark('X0', 198.5 + 3 * 85, 71.5, 'cross');
+                // Action tracks (ABC)
+                gen('c', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 136.5, 'circle'));
+                gen('C', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 136.5, 'cross'));
+                gen('a', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 204, 'circle'));
+                gen('A', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 204, 'cross'));
+                gen('b', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 204 + 67.5, 'circle'));
+                gen('B', 7).forEach(([id, x]) => makeMark(id, 261 + x * 58.6, 204 + 67.5, 'cross'));
+                makeMark('X1', 261 + 5 * 70.3 + 22, 215.5 + 67.5, 'cross', 'small');
+                // Yellow (123)
+                [1, 2, 3].forEach(y =>
+                    gen(y.toString(), 6).forEach(([id, x]) => makeMark(id, 56 + x * 47, 393 + (y - 1) * 80, 'cross'))
+                );
+                makeMark('O2', 56 + 0 * 47, 393 + 40, 'circle', 'small');
+                makeMark('Q2', 56 + 1 * 47, 393 + 40, 'circle', 'small');
+                makeXMark('2', 56 + 2 * 47, 393 + 40, 'small');
+                makeXMark('3', 56 + 3 * 47, 393 + 40, 'small');
+                makeMark('F1', 56 + 4 * 47, 393 + 40, 'circle', 'small');
+                makeXMark('4', 56 + 5 * 47, 393 + 40, 'small');
+                makeMark('O3', 56 + 0 * 47, 393 + 40 + 80, 'circle', 'small');
+                makeXMark('5', 56 + 1 * 47, 393 + 40 + 80, 'small');
+                makeMark('P2', 56 + 2 * 47, 393 + 40 + 80, 'circle', 'small');
+                makeXMark('6', 56 + 3 * 47, 393 + 40 + 80, 'small');
+                makeXMark('7', 56 + 4 * 47, 393 + 40 + 80, 'small');
+                makeMark('Q3', 56 + 5 * 47, 393 + 40 + 80, 'circle', 'small');
+                // Teal (4)
+                gen('4', 6, 5).forEach(([id, x, y]) => makeMark(id, 381.5 + x * 41.1, 390 + y * 40.5, 'cross', 'small'));
+                makeXMark('8', 635, 390 + 0 * 40.5, 'small')
+                makeXMark('9', 635, 390 + 1 * 40.5, 'small')
+                makeXMark('a', 635, 390 + 2 * 40.5, 'small')
+                makeXMark('b', 635, 390 + 3 * 40.5, 'small')
+                makeMark('O4', 381.5 + 0 * 41.1, 600, 'small', 'circle');
+                makeMark('P3', 381.5 + 1 * 41.1, 600, 'small', 'circle');
+                makeMark('Q4', 381.5 + 2 * 41.1, 600, 'small', 'circle');
+                makeXMark('c', 381.5 + 3 * 41.1, 600, 'small');
+                makeXMark('d', 381.5 + 4 * 41.1, 600, 'small');
+                makeMark('F2', 381.5 + 5 * 41.1, 600, 'small', 'circle');
+                // Blue (56)
+                gen('5', 6).forEach(([id, x]) => makeMark(id, 33 + (5 - x) * 49, 676));
+                gen('6', 6).forEach(([id, x]) => makeMark(id, 33 + (7 + x) * 49, 676));
+                makeMark('XE', 33 + 4 * 49, 703, 'cross', 'small');
+                makeMark('XF', 33 + 2 * 49, 703, 'cross', 'small');
+                makeMark('XG', 33 + 0 * 49, 703, 'cross', 'small');
+                makeMark('XH', 33 + 10 * 49, 703, 'cross', 'small');
+                // Brown (7)
+                gen('7', 12).forEach(([id, x]) => makeMark(id, 70 + x * 50.1, 817, 'cross'));
+                makeMark('XI', 95 + 1 * 50.1, 817, 'cross', 'small')
+                makeMark('XJ', 95 + 3 * 50.1, 817, 'cross', 'small')
+                makeMark('XK', 95 + 7 * 50.1, 817, 'cross', 'small')
+                makeMark('XL', 95 + 10 * 50.1, 817, 'cross', 'small')
+                // Pink (89)
+                gen('9', 12).forEach(([id, x]) => [3, 6, 10].includes(x) || makeMark(id, 70 + x * 50.1, 899 - 32, 'hide'));
+                gen('8', 12).forEach(([id, x]) => makeMark(id, 70 + x * 50.1, 899));
+                gen('U', 12).forEach(([id, x]) => [3, 6, 10].includes(x) || makeMark(id, 70 + x * 50.1, 924, 'small', 'redcross'));
+                gen('T', 12).forEach(([id, x]) => [3, 6, 10].includes(x) || makeMark(id, 70 + x * 50.1, 899));
+                makeMark('XM', 70 + 1 * 50.1, 924, 'cross', 'small');
+                makeMark('XN', 70 + 2 * 50.1, 924, 'cross', 'small');
+                makeMark('XO', 70 + 5 * 50.1, 924, 'cross', 'small');
+                makeMark('XP', 70 + 9 * 50.1, 924, 'cross', 'small');
+                makeMark('XQ', 70 + 11 * 50.1, 924, 'cross', 'small');
+            },
+            canMark: (id) => {
+                if (id in state.marked) return false;
+                const [t, i] = parseId(id);
+                if (t === 'R' || t === 'C' || t === 'X') return id.toLowerCase() in state.marked;
+                if (t === 'r') return prevMarked(id);
+                if (t === 'A' || t === 'B') return id.toLowerCase() in state.marked && prevMarked(id);
+                if (t >= '1' && t <= '4') return true;
+                if (t === '5' || t === '6') return prevMarked(id);
+                if (t === '7') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].every(k => k <= i || !(makeId('7', k) in state.marked));
+                if (t === '8' || t === '9')
+                    return (i === 1 || makeId('8', i - 1) in state.marked || makeId('9', i - 1) in state.marked) &&
+                        !(makeId(t === '8' ? '9' : '8', i) in state.marked);
+                return false;
+            },
+            markAsValue: (id) => id[0] === '5' || id[0] === '6' || id[0] === '8' || id[0] === '9' || id[0] === 'T',
+            allowValue: (id, val) => {
+                if (id[0] !== '5' && id[0] !== '6') return val < 7;
+                if (val === 1) return false;
+                if (val === 7) return true;
+                const [t, i] = parseId(id);
+                const prev = prevId(id);
+                const prevVal = prev ? state.marked[prev] : 7;
+                const reqVal = prevVal + (t === '5' ? -1 : 1) * [1, 2, 2, -2, -2, -1][i - 1];
+                return val === reqVal;
+            },
+            writeValue: (id, val) => id == '84' ? val + 3 : id === '87' ? val + 4 : id === '8B' ? val + 5 :
+                id[0] === '8' ? [1, 1, 2, 2, 3, 3][val - 1] : (({ '92': 2, '93': 2, '96': 2, '98': 2, '99': 4, '9A': 2, '9C': 3 })[id] || 1) * val,
+            score: () => {
+                const yellowScore = [..."123"].reduce((a, i) => a + [0, 2, 6, 12, 20, 30, 42][countType(i)], 0) + countType('S') * 3;
+                const tealScore = [0, 1, 2, 3, 4].reduce((a, i) => a + (
+                    [0, 1, 3, 6, 10, 15, 21][[0, 1, 2, 3, 4, 5].filter(j => makeId('4', i * 6 + j + 1) in state.marked).length]
+                ), 0) + [..."1347CFHMNPRTU"].filter(i => ('4' + i) in state.marked).length * 4;
+                const blueCount = countType('7');
+                const blueScore = ["5", "6"].reduce((a, v) => a + [0, 3, 6, 9, 13, 17, 22][countType(v)] +
+                    [..."123456"].reduce((a, i) => a + (state.marked[v + i] < 5 || state.marked[v + i] > 9 ? 6 : 0), 0),
+                    0);
+                const brownCount = countType('7');
+                const brownScore = (brownCount + 1) * (brownCount + 2) / 2 - 1 +
+                    (state.marked['73'] && state.marked['74'] ? 2 : 0) +
+                    (state.marked['76'] && state.marked['77'] ? 3 : 0) +
+                    (state.marked['79'] && state.marked['7A'] ? 4 : 0);
+                const pinkScore = sumType('8') + sumType('9');
+                return addFoxScore(yellowScore, tealScore, blueScore, brownScore, pinkScore);
+            },
+            autoMark: () => {
+                // Round track
+                tryMark('O1', 'r1');
+                tryMark('P1', 'r2');
+                tryMark('Q1', 'r3');
+                tryMark('x0', 'r4');
+                tryMark('R1', 'r2');
+                tryMark('R2', 'r3');
+                tryMark('R3', 'r4');
+                tryMark('R4', 'r5');
+                tryMark('R5', 'r6');
+                // Yellow
+                tryMark('O2', '11', '21');
+                tryMark('Q2', '12', '22');
+                tryMark('x2', '13', '23');
+                tryMark('x3', '14', '24');
+                tryMark('F1', '15', '25');
+                tryMark('x4', '16', '26');
+                tryMark('O3', '21', '31');
+                tryMark('x5', '22', '32');
+                tryMark('P2', '23', '33');
+                tryMark('x6', '24', '34');
+                tryMark('x7', '25', '35');
+                tryMark('Q3', '26', '36');
+                [..."123456"].forEach(i => tryMark('S' + i, '1' + i, '2' + i, '3' + i));
+                // Teal
+                // 123456 _#__## _2__56
+                // 789ABC _####_ _89AB_
+                // DEFGHI ##_#_# DE_G_I
+                // JKLMNO ###__# JKL__O
+                // PQRSTU _#_#__ _Q_S__
+                tryMark('x8', '42', '45', '46');
+                tryMark('x9', '48', '49', '4A', '4B');
+                tryMark('xa', '4D', '4E', '4G', '4I');
+                tryMark('xb', '4J', '4K', '4L', '4O');
+                tryMark('O4', '4D', '4J');
+                tryMark('P3', '42', '48', '4E', '4K', '4Q');
+                tryMark('Q4', '49', '4L');
+                tryMark('xc', '4A', '4G', '4S');
+                tryMark('xd', '45', '4B');
+                tryMark('F2', '46', '4I', '4O');
+                // Blue
+                tryMark('xe', '52');
+                tryMark('xf', '54');
+                tryMark('F3', '55');
+                tryMark('xg', '56');
+                tryMark('O5', '61');
+                tryMark('Q5', '62');
+                tryMark('xh', '64');
+                tryMark('P4', '66');
+                // Brown
+                tryMark('O6', '71', '72');
+                tryMark('xi', '72', '73');
+                tryMark('xj', '75', '75');
+                tryMark('P5', '75', '76');
+                tryMark('Q6', '77', '78');
+                tryMark('xk', '78', '79');
+                tryMark('F4', '7A', '7B');
+                tryMark('xl', '7B', '7C');
+                // Pink
+                for (let i = 1; i <= 12; i++) if (makeId('9', i) in state.marked) {
+                    state.marked[makeId('U', i)] = true;
+                    state.marked[makeId('T', i)] = state.marked[makeId('9', i)];
+                }
+                tryMark('Q7', '81');
+                tryMark('xm', '82');
+                tryMark('xn', '83');
+                tryMark('O7', '85');
+                tryMark('xo', '86');
+                tryMark('P6', '88');
+                tryMark('F5', '89');
+                tryMark('xp', '8A');
+                tryMark('xq', '8C');
+                // Bonus tracks
+                bonusMark('O', 'a');
+                tryMark('P7', 'a6');
+                bonusMark('P', 'b');
+                tryMark('x1', 'b6');
+                bonusMark('Q', 'c');
+                tryMark('F0', 'c6');
+            }
+        };
 
 
 
@@ -1352,7 +1546,7 @@
                 if (id in state.marked) element.classList.add('marked'); else element.classList.remove('marked');
             });
         }
-        buildBoard(board3A);
+        buildBoard(board3B);
         scaleContainer();
         updateBoard();
         window.addEventListener("resize", scaleContainer);

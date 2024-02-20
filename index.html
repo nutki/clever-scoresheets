@@ -203,16 +203,33 @@
             width: 50%;
         }
 
-        #menu-bar>.menu-mode-1 {
+        #menu-bar>* {
             display: none
+        }
+
+        #menu-bar>div.disabled {
+            filter: brightness(.4)
+        }
+
+        #menu-bar.menu-mode-0>.menu-mode-0 {
+            display: block
         }
 
         #menu-bar.menu-mode-1>.menu-mode-1 {
             display: block
         }
 
-        #menu-bar.menu-mode-1>.menu-mode-0 {
-            display: none
+        #menu-bar.menu-mode-2>.menu-mode-2 {
+            display: block
+        }
+
+        #menu-score-value {
+            width: 30px;
+            font-family: 'numbers';
+            position: absolute;
+            text-align: center;
+            font-size: 24px;
+            line-height: 30px;
         }
 
         .board1 div.color1 {
@@ -318,18 +335,54 @@
 </head>
 
 <body>
-    <div id="menu-bar">
-        <div class="menu-mode-0" id="menu-score">SCORE</div>
-        <div class="menu-mode-0" id="menu-undo">UNDO</div>
-        <div class="menu-mode-0" id="menu-scale">SIZE</div>
-        <div class="menu-mode-0" id="menu-reset">RESET</div>
-        <div class="menu-mode-1" id="menu-scale-close">BACK</div>
+    <div id="menu-bar" class="menu-mode-0">
+        <div class="menu-mode-0" id="menu-history-prev"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+            </svg></div>
+        <div class="menu-mode-0" id="menu-score">
+            <div id="menu-score-value">123</div><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30">
+                <path style="fill:#fff"
+                    d="M620-360q-17 0-28.5-11.5T580-400v-160q0-17 11.5-28.5T620-600h100q17 0 28.5 11.5T760-560v160q0 17-11.5 28.5T720-360H620Zm20-60h60v-120h-60v120Zm-440 60v-100q0-17 11.5-28.5T240-500h80v-40H200v-60h140q17 0 28.5 11.5T380-560v60q0 17-11.5 28.5T340-460h-80v40h120v60H200Zm250-160v-60h60v60h-60Zm0 140v-60h60v60h-60ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h120v-80h80v80h240v-80h80v80h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h290v-60h60v60h290v-480H510v60h-60v-60H160v480Zm0 0v-480 480Z" />
+            </svg>
+        </div>
+        <div class="menu-mode-2" id="menu-undo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30">
+                <path style="fill:#fff"
+                    d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
+            </svg></div>
+        <input class="menu-mode-0" type="range" id="log-slider" value="100" min="0" max="100" step="1"
+            oninput="scaleLog()">
+        <div class="menu-mode-2" id="menu-redo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path
+                    d="M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z" />
+            </svg></div>
+        <div class="menu-mode-0" id="menu-scale"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path
+                    d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400ZM280-540v-80h200v80H280Z" />
+            </svg></div>
+        <div class="menu-mode-0 menu-mode-2" id="menu-reset"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path
+                    d="M200-120q-33 0-56.5-23.5T120-200v-160h80v160h560v-560H200v160h-80v-160q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm220-160-56-58 102-102H120v-80h346L364-622l56-58 200 200-200 200Z" />
+            </svg></div>
+        <div class="menu-mode-1" id="menu-scale-close"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
+            </svg></div>
         <input class="menu-mode-1" type="range" id="scale-slider" value="100" min="30" max="100" step="1"
             oninput="scaleContainer()">
+        <div class="menu-mode-0" id="menu-history-next"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+                viewBox="0 -960 960 960" width="30" style="fill:#fff">
+                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+            </svg></div>
     </div>
     <div id="outer-container">
         <div id="image-container">
-            <img id="resizable-image" src="back1.png" alt="Resizable Image">
+            <img id="resizable-image" src="back1.png">
             <div id="board-modal" style="display:none;"></div>
             <div id="score-modal" style="display:none;">
                 <div class="color1">
@@ -428,15 +481,20 @@
             container.style.transform = `translate(-50%, -50%) scale(${sliderValue / 100 * baseScale})`;
             localStorage.setItem('scale', sliderValue.toString());
         }
-        document.getElementById('menu-score').onclick = document.getElementById('score-modal').onclick = () => {
-            const e = document.getElementById('score-modal');
-            e.style.display = e.style.display == 'none' ? 'flex' : 'none'
-        };
-        document.getElementById('menu-undo').onclick = () => {
-            state.log.pop();
-            save();
-            replayLog();
+        function scaleLog() {
+            const sliderValue = document.getElementById('log-slider').value;
+            logSetPos(sliderValue);
+
         }
+        document.getElementById('menu-score-value').onclick =
+            document.getElementById('menu-score').onclick = document.getElementById('score-modal').onclick = () => {
+                const e = document.getElementById('score-modal');
+                e.style.display = e.style.display == 'none' ? 'flex' : 'none'
+            };
+        document.getElementById('menu-undo').onclick = () => logUndo();
+        document.getElementById('menu-redo').onclick = () => logRedo();
+        document.getElementById('menu-history-prev').onclick = () => historyBrowser.prev();
+        document.getElementById('menu-history-next').onclick = () => historyBrowser.next();
         document.getElementById('menu-reset').onclick = () => {
             document.getElementById('board-modal').style.display = 'flex'
         }
@@ -449,43 +507,83 @@
         // }
         document.getElementById('menu-scale').onclick = () => {
             const e = document.getElementById('menu-bar');
-            e.classList.add("menu-mode-1");
+            e.className = 'menu-mode-1';
         }
         document.getElementById('menu-scale-close').onclick = () => {
             const e = document.getElementById('menu-bar');
-            e.classList.remove("menu-mode-1");
+            e.className = 'menu-mode-0'
         }
 
         const state = {
             marked: {},
             log: [],
+            logPos: 0,
         }
-        function save() {
-            localStorage.setItem('state', board.id + state.log.join(''));
-        }
-        function load() {
-            const s = localStorage.getItem('state');
-            if (!s) return;
-            const boardId = s.substring(0, 2);
-            const compactLog = s.substring(2);
-            const b = boards.find(b => b.id === boardId);
-            if (!b) return;
-            board = b;
+        function logFromString(compactLog) {
             state.log = [];
             for (let i = 0; i < compactLog.length;) {
                 const len = board.markAsValue(compactLog[i]) ? 3 : 2;
                 state.log.push(compactLog.substring(i, i + len));
                 i += len;
             }
+            state.logPos = state.log.length;
             replayLog();
         }
+        function logToString() {
+            return state.log.slice(0, state.logPos).join('');
+        }
+        function logAppend(v) {
+            state.log.splice(state.logPos++, Infinity, v);
+            save();
+        }
+        function logSetPos(pos) {
+            if (pos < 0 || pos > state.log.length) return;
+            state.logPos = pos;
+            replayLog();
+        }
+        function logUndo() {
+            if (!state.logPos) return;
+            state.logPos--;
+            replayLog();
+            save();
+        }
+        function logRedo() {
+            if (state.logPos >= state.log.length) return;
+            state.logPos++;
+            replayLog();
+            save();
+        }
+        function logClear() {
+            state.log = [];
+            state.logPos = 0;
+            replayLog();
+            save();
+        }
+        function logCanUndo() { return state.logPos > 0; }
+        function logCanRedo() { return state.logPos < state.log.length; }
+        function logEmpty() { return !state.logPos; }
+        function logIncomplete() { return !state.log.includes('r4'); }
+        function logGetPos() { return state.logPos; }
+        function logMaxPos() { return state.log.length; }
         function replayLog() {
             state.marked = {};
-            state.log.forEach(v => {
+            state.log.slice(0, state.logPos).forEach(v => {
                 state.marked[v.substring(0, 2)] = v.length > 2 ? board.writeValue(v.substring(0, 2), parseInt(v[2], 36)) : true;
                 board.autoMark();
             });
             updateBoard();
+        }
+        function save() {
+            localStorage.setItem('state', board.id + logToString());
+        }
+        function load() {
+            const s = localStorage.getItem('state');
+            if (!s) return;
+            const boardId = s.substring(0, 2);
+            const b = boards.find(b => b.id === boardId);
+            if (!b) return;
+            buildBoard(b);
+            logFromString(s.substring(2));
         }
         function parseId(id) { return [id[0], parseInt(id[1], 36)]; }
         function makeId(t, i) {
@@ -939,7 +1037,7 @@
                 const orangeCount = countType('6');
                 const orangeScore = orangeCount * (orangeCount + 1) / 2;
                 const purpleCount = countType('7');
-                const purpleScore = 1 + purpleCount * (purpleCount - 1) / 2 + sumType('7', v => (v > 4 ? 1 : 0) + (v > 9 ? 1 : 0) + (v > 14 ? 1 : 0) + (v > 19 ? 1 : 0));
+                const purpleScore = purpleCount ? 1 + purpleCount * (purpleCount - 1) / 2 + sumType('7', v => (v > 4 ? 1 : 0) + (v > 9 ? 1 : 0) + (v > 14 ? 1 : 0) + (v > 19 ? 1 : 0)) : 0;
                 return addFoxScore(yellowScore, blueScore, greenScore, orangeScore, purpleScore);
             },
             autoMark: () => {
@@ -2150,8 +2248,7 @@
                 face.textContent = i;
                 face.onclick = () => {
                     state.marked[id] = board.writeValue(id, i);
-                    state.log.push(id + i.toString(36));
-                    save();
+                    logAppend(id + i.toString(36));
                     updateBoard();
                     modal.style.display = 'none';
                 }
@@ -2163,9 +2260,11 @@
         }
         function updateBoard() {
             board.autoMark();
-            const scores = board.score();
+            const scores = board.score(), totalScore = scores.reduce((a, v) => a + v, 0);
             scores.forEach((v, i) => document.getElementById('score' + (i + 1)).innerText = v);
-            document.getElementById('score').innerText = scores.reduce((a, v) => a + v, 0);
+            document.getElementById('score').innerText = totalScore;
+            document.getElementById('menu-score-value').innerText = totalScore;
+            document.querySelector('#menu-score svg').style.opacity = .4;
             const container = document.querySelector('#image-container');
             const markElements = container.querySelectorAll('.mark');
             markElements.forEach(function (element) {
@@ -2179,8 +2278,7 @@
                         setupDiceModal(element, id);
                     } else {
                         document.getElementById('dice-modal').style.display = 'none';
-                        state.log.push(id);
-                        save();
+                        logAppend(id);
                         state.marked[id] = true;
                         updateBoard();
                     }
@@ -2188,6 +2286,56 @@
                 element.style.cursor = canMark ? 'pointer' : 'auto';
                 if (id in state.marked) element.classList.add('marked'); else element.classList.remove('marked');
             });
+            document.getElementById('menu-undo').classList[logCanUndo() ? 'remove' : 'add']('disabled');
+            document.getElementById('menu-redo').classList[logCanRedo() ? 'remove' : 'add']('disabled');
+            document.getElementById('log-slider').max = logMaxPos();
+            document.getElementById('log-slider').value = logGetPos();
+            document.getElementById('menu-history-prev').classList[historyBrowser.hasPrev() ? 'remove' : 'add']('disabled');
+            document.getElementById('menu-history-next').classList[historyBrowser.hasNext() ? 'remove' : 'add']('disabled');
+        }
+        const historyBrowser = (() => {
+            const history = JSON.parse(localStorage.getItem('history') || '[]');
+            let currentIdx = history.length - 1;
+            const toEntry = ({ b, s, t, i }) => ({
+                board: boards.find(board => board.id === b),
+                date: new Date(t * 1000).toLocaleDateString(),
+                incomplete: !!i,
+                score: s,
+            });
+            const load = (i = currentIdx) => {
+                currentIdx = i;
+                const current = history[currentIdx];
+                const currentEntry = toEntry(current);
+                buildBoard(currentEntry.board);
+                logFromString(current.l);
+                return currentEntry;
+            };
+            return {
+                asList: () => history.map(toEntry),
+                load,
+                hasNext: () => currentIdx < history.length - 1,
+                hasPrev: () => currentIdx > 0,
+                remove: (i = currentIdx) => {
+                    history.splice(i, 1);
+                    if (i >= currentIdx) currentIdx--;
+                },
+                next: () => load(currentIdx + 1),
+                prev: () => load(currentIdx - 1),
+                current: () => currentIdx < 0 ? {} : toEntry(history[currentIdx]),
+            }
+        })();
+        function maybeSaveHistory() {
+            if (logEmpty()) return;
+            const history = JSON.parse(localStorage.getItem('history') || '[]');
+            history.push({
+                b: board.id,
+                l: logToString(),
+                s: board.score().reduce((a, v) => a + v, 0),
+                t: Math.floor(Date.now() / 1000),
+                i: logIncomplete() ? 1 : undefined,
+            })
+            if (history.length > 1000) history.splice(0, history.length - 1000);
+            localStorage.setItem('history', JSON.stringify(history));
         }
         boards.forEach(b => {
             const e = document.createElement('div');
@@ -2199,16 +2347,14 @@
                 "board4": '#00aae2',
             }[b.colorScheme];
             e.onclick = () => {
+                maybeSaveHistory();
                 buildBoard(b);
-                state.log = [];
-                save();
-                replayLog();
+                logClear();
                 updateBoard();
                 document.getElementById('board-modal').style.display = 'none';
             }
             document.getElementById('board-modal').append(e);
         })
-        board = board1A;
         load();
         {
             const e = document.createElement('div');
@@ -2217,8 +2363,7 @@
             document.getElementById('board-modal').append(e);
         }
         document.getElementById('scale-slider').value = parseFloat(localStorage.getItem('scale') || '100') || 100;
-        if (!state.log.length) document.getElementById('board-modal').style.display = 'flex';
-        buildBoard(board);
+        if (logEmpty()) document.getElementById('board-modal').style.display = 'flex';
         updateBoard();
         window.addEventListener("resize", scaleContainer);
     </script>

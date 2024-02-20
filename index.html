@@ -58,7 +58,7 @@
             width: 35px;
             height: 35px;
             text-align: center;
-            /* background-color: rgba(0,0,0,.3); */
+            background-color: rgba(0, 0, 0, .3);
         }
 
         .circle.marked {
@@ -104,7 +104,7 @@
             z-index: 2;
         }
 
-        .dice-value {
+        #dice-modal>div {
             display: block;
             width: 35px;
             height: 35px;
@@ -152,6 +152,39 @@
             border-style: solid;
             background-color: transparent;
             line-height: 66px;
+        }
+
+        #board-modal {
+            position: absolute;
+            width: 600px;
+            gap: 10px 15px;
+            flex-wrap: wrap;
+            flex-direction: column;
+            font-family: 'numbers';
+            color: #333;
+            font-size: 38px;
+            line-height: 38px;
+            background-color: #fff;
+            border: 7px solid #ddd;
+            border-radius: 13px;
+            z-index: 2;
+            padding: 10px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+        }
+
+        #board-modal>div {
+            width: 100%px;
+            height: 45px;
+            border-radius: 13px;
+            font-family: sans-serif;
+            text-align: center;
+            font-size: 40px;
+            line-height: 45px;
+            cursor: pointer;
+            border: 3px solid black;
         }
 
         #menu-bar {
@@ -295,6 +328,7 @@
     <div id="outer-container">
         <div id="image-container">
             <img id="resizable-image" src="back1.png" alt="Resizable Image">
+            <div id="board-modal" style="display:none;"></div>
             <div id="score-modal" style="display:none;">
                 <div class="color1">
                     <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg">
@@ -379,20 +413,7 @@
                 <div style="font-family: sans-serif; font-weight:bold;">Σ</div>
                 <div id="score" style="background-color: #d0d0d0;">1230</div>
             </div>
-            <div id="dice-modal">
-                <div id="D1" class="dice-value">1</div>
-                <div id="D2" class="dice-value">2</div>
-                <div id="D3" class="dice-value">3</div>
-                <div id="D4" class="dice-value">4</div>
-                <div id="D5" class="dice-value">5</div>
-                <div id="D6" class="dice-value">6</div>
-                <div id="D7" class="dice-value">7</div>
-                <div id="D8" class="dice-value">8</div>
-                <div id="D9" class="dice-value">9</div>
-                <div id="D10" class="dice-value">10</div>
-                <div id="D11" class="dice-value">11</div>
-                <div id="D12" class="dice-value">12</div>
-            </div>
+            <div id="dice-modal"></div>
         </div>
     </div>
 
@@ -401,7 +422,7 @@
         function scaleContainer() {
             const sliderValue = document.getElementById('scale-slider').value;
             const container = document.getElementById('image-container');
-            const baseScale = Math.min(container.parentElement.clientHeight / 1000, container.parentElement.clientWidth / 700);
+            const baseScale = Math.min(container.parentElement.clientHeight / 1000, container.parentElement.clientWidth / getWidth());
             container.style.transform = `translate(-50%, -50%) scale(${sliderValue / 100 * baseScale})`;
         }
         document.getElementById('menu-score').onclick = document.getElementById('score-modal').onclick = () => {
@@ -413,8 +434,7 @@
             replayLog();
         }
         document.getElementById('menu-reset').onclick = () => {
-            state.log = [];
-            replayLog();
+            document.getElementById('board-modal').style.display = 'flex'
         }
         document.getElementById('menu-scale').onclick = () => {
             const e = document.getElementById('menu-bar');
@@ -505,11 +525,16 @@
             const image = document.querySelector('#resizable-image');
             const markElements = container.querySelectorAll('.mark');
             image.src = board.image;
+            container.style.width = getWidth() + 'px';
             container.className = board.colorScheme;
             markElements.forEach(el => el.remove());
             board.buildBoard();
         }
+        function getWidth() {
+            return board.width || 700;
+        }
         const board1A = {
+            name: 'Clever',
             image: 'back1.png',
             colorScheme: 'board1',
             buildBoard: (container) => {
@@ -566,13 +591,7 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '4' || id[0] === '5',
-            allowValue: (id, val) => {
-                if (val > 6) return false;
-                if (id[0] !== '5') return true;
-                const prev = prevId(id);
-                if (!prev) return true;
-                return state.marked[prev] === 6 || state.marked[prev] < val;
-            },
+            allowValue: (id) => id[0] === '4' || id === '51' ? allow1d() : allow1d(val => state.marked[prevId(id)] % 6 < val),
             writeValue: (id, val) => (({ '44': 2, '47': 2, '49': 2, '4B': 3 })[id] || 1) * val,
             score: () => {
                 let yellowScore = 0;
@@ -643,9 +662,10 @@
                 bonusMark('O', 'a');
                 bonusMark('P', 'b');
             }
-        }
+        };
         const board1B = {
-            image: '1B.png',
+            name: 'Clever Challenge I',
+            image: '1B2.png',
             colorScheme: 'board1',
             buildBoard: (container) => {
                 // Round track
@@ -657,6 +677,7 @@
                 gen('A', 7).forEach(([id, x]) => makeMark(id, 215 + x * 66.3, 150.85, 'cross'));
                 gen('b', 7).forEach(([id, x]) => makeMark(id, 215 + x * 66.3, 258.5, 'circle'));
                 gen('B', 7).forEach(([id, x]) => makeMark(id, 215 + x * 66.3, 258.5, 'cross'));
+                makeMark('XH', 215 + 6 * 66.3 + 15, 258.5 + 30, 'cross');
                 // Yellow
                 gen('1', 4, 4, (x, y) => [1, 3, 0, 2][y] !== x).forEach(([id, x, y]) => makeMark(id, 65 + x * 54, 369 + y * 55.5, 'cross'));
                 makeXMark('1', 290, 369 + 0 * 55.5);
@@ -705,13 +726,7 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '4' || id[0] === '5',
-            allowValue: (id, val) => {
-                if (val > 6) return false;
-                if (id[0] !== '5') return true;
-                const prev = prevId(id);
-                if (!prev) return true;
-                return val === 6 || state.marked[prev] > val;
-            },
+            allowValue: (id) => id[0] === '4' || id === '51' ? allow1d() : allow1d(val => val === 6 || state.marked[prevId(id)] > val),
             writeValue: (id, val) => (({ '41': -1, '43': 2, '44': 3, '45': -1, '47': 2, '48': 3, '49': -1, '4B': 4 })[id] || 1) * val,
             score: () => {
                 let yellowScore = 0;
@@ -781,11 +796,186 @@
                 tryMark('P7', '5B');
                 // Bonus tracks
                 bonusMark('O', 'a');
+                tryMark('F0', 'a7');
                 bonusMark('P', 'b');
-                // TODO new printing action track bonuses
+                tryMark('xh', 'b7');
             }
         };
+        const board1C = {
+            name: 'Clever Deluxe',
+            image: '1C.jpg',
+            width: 830,
+            colorScheme: 'board1',
+            buildBoard: (container) => {
+                // Round track
+                gen('r', 6).forEach(([id, x]) => makeMark(id, 179 + x * 85.5, 37.5, 'circle'));
+                gen('R', 6).forEach(([id, x]) => makeMark(id, 179 + x * 85.5, 37.5, 'cross'));
+                makeMark('X0', 179 + 3 * 85.5, 78, 'cross');
+                // Action tracks
+                gen('a', 7).forEach(([id, x]) => makeMark(id, 237 + x * 43.5, 139 + (x & 1 ? 24 : 0), 'circle'));
+                gen('A', 7).forEach(([id, x]) => makeMark(id, 237 + x * 43.5, 139 + (x & 1 ? 24 : 0), 'cross'));
+                gen('b', 7).forEach(([id, x]) => makeMark(id, 237 + x * 43.5, 228.5 + (x & 1 ? 24 : 0), 'circle'));
+                gen('B', 7).forEach(([id, x]) => makeMark(id, 237 + x * 43.5, 228.5 + (x & 1 ? 24 : 0), 'cross'));
+                gen('c', 3, 3).forEach(([id, x, y]) => makeMark(id, 648 + x * 43, 150 + y * 44.5, 'circle'));
+                gen('C', 3, 3).forEach(([id, x, y]) => makeMark(id, 648 + x * 43, 150 + y * 44.5, 'cross'));
+                // Yellow
+                [1, 2, 3].forEach(y =>
+                    gen(y.toString(), y == 1 ? 6 : 5).forEach(([id, x]) => makeMark(id, 88 + x * 52.7 + (y > 1 ? 3 : 0), 357 + (y - 1) * 72.7))
+                );
+                gen('s', 5).forEach(([id, x]) => makeMark(id, 88 + x * 52.7, 558, 'small', 'circle'));
+                makeMark('y1', 358, 358 + 1 * 72.7);
+                makeMark('y2', 358, 358 + 2 * 72.7);
+                makeMark('y3', 358, 558);
+                makeMark('X1', 88 + 2 * 52.7, 385 + 0 * 72.7, 'small', 'cross');
+                makeMark('X2', 88 + 3 * 52.7, 385 + 0 * 72.7, 'small', 'cross');
+                makeMark('X3', 88 + 5 * 52.7, 385 + 0 * 72.7, 'small', 'cross');
+                makeMark('X4', 88 + 1 * 52.7, 385 + 1 * 72.7, 'small', 'cross');
+                makeMark('X5', 88 + 4 * 52.7, 385 + 1 * 72.7, 'small', 'cross');
+                // Blue
+                gen('4', 4, 4, (x, y) => 3 - x !== y).forEach(([id, x, y]) => makeMark(id, 516.5 + x * 52.7, 354 + y * 53.5, 'cross'));
+                makeXMark('6', 735, 354 + 0 * 53.5);
+                makeXMark('7', 735, 354 + 1 * 53.5);
+                makeXMark('8', 735, 354 + 2 * 53.5);
+                makeXMark('9', 735, 354 + 3 * 53.5);
+                makeMark('P3', 516.5 + 0 * 52.7, 575, 'circle');
+                makeMark('Q3', 516.5 + 1 * 52.7, 575, 'circle');
+                makeMark('O4', 516.5 + 2 * 52.7, 575, 'circle');
+                makeMark('F2', 516.5 + 3 * 52.7, 575, 'circle');
+                makeMark('P4', 731, 575, 'circle');
+                // Green
+                gen('5', 12).forEach(([id, x]) => makeMark(id, 115 + x * 56.3 - (x & 1 ? 3 : 0), 650));
+                gen('T', 6).forEach(([id, x]) => makeMark(id, 142 + x * 112.6, 650 - 32));
+                makeMark('XA', 115 + 4 * 56.3, 681, 'cross', 'small');
+                makeMark('XB', 115 + 5 * 56.3 - 3, 681, 'cross', 'small');
+                makeMark('XC', 115 + 9 * 56.3 - 3, 681, 'cross', 'small');
+                makeMark('XD', 115 + 11 * 56.3 - 3, 681, 'cross', 'small');
+                // Orange
+                gen('6', 12).forEach(([id, x]) => makeMark(id, 115 + x * 56, 761, 'cross'));
+                makeMark('XE', 115 + 29 + 1 * 56, 761, 'cross', 'small')
+                makeMark('XF', 115 + 29 + 5 * 56, 761, 'cross', 'small')
+                makeMark('XG', 115 + 29 + 7 * 56, 761, 'cross', 'small')
+                makeMark('XH', 115 + 29 + 9 * 56, 761, 'cross', 'small')
+                // Purple
+                gen('7', 12).forEach(([id, x]) => makeMark(id, 115 + x * 56, 856));
+                makeMark('XI', 115 + 2 * 56, 883, 'cross', 'small')
+                makeMark('XJ', 115 + 5 * 56, 883, 'cross', 'small')
+                makeMark('XK', 115 + 10 * 56, 883, 'cross', 'small')
+                makeMark('XL', 115 + 11 * 56, 883, 'cross', 'small')
+            },
+            canMark: (id) => {
+                if (id in state.marked) return false;
+                const [t, i] = parseId(id);
+                if (t === 'R' || t === 'C' || t === 'X') return id.toLowerCase() in state.marked;
+                if (t === 'c') return countType('c') < countType('Q') && (i % 3 === 1 || prevMarked(id));
+                if (t === 'r') return prevMarked(id);
+                if (t === 'A' || t === 'B') return id.toLowerCase() in state.marked && prevMarked(id);
+                if (t === '2' || t === '3' || t === '7') return prevMarked(id);
+                if (t === '4') return true;
+                if (t === '1') return id[1] === '1' || state.marked[prevId(id)] > 1;
+                if (t === '5') {
+                    const ii = ((i - 1) >> 1 << 1) - 1;
+                    return i <= 2 || (makeId('5', ii) in state.marked && makeId('5', ii + 1) in state.marked);
+                }
+                if (t === '6') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].every(k => k <= i || !(makeId('6', k) in state.marked));
+                return false;
+            },
+            markAsValue: (id) => id[0] >= '1' && id[0] <= '3' || id[0] === '5' || id[0] === '7' || id[0] === 'y' || id[0] === 'T',
+            allowValue: (id) => {
+                if (id[0] === '7') {
+                    const min = id == '71' ? 1 : state.marked[prevId(id)] + 1;
+                    return [...Array(15)].map((_, i) => i + min);
+                }
+                if (id[0] === '1') return allow1d(val => id[1] === '1' || (state.marked[prevId(id)] > val));
+                return allow1d();
+            },
+            writeValue: (id, val) => (({ '51': 2, '52': 3, '53': 2, '54': 2, '55': 2, '57': 3, '58': 2, '59': 3, '5B': 4 })[id] || 1) * val,
+            score: () => {
+                let yellowScore = sumType('3') - sumType('2') + (state.marked['y3'] || 0);
+                const blueCount = countType('4');
+                const blueScore = blueCount * (blueCount + 1) / 2;
+                const greenScore = sumType('T');
+                const orangeCount = countType('6');
+                const orangeScore = orangeCount * (orangeCount + 1) / 2;
+                const purpleCount = countType('7');
+                const purpleScore = 1 + purpleCount * (purpleCount - 1) / 2 + sumType('7', v => (v > 4 ? 1 : 0) + (v > 9 ? 1 : 0) + (v > 14 ? 1 : 0) + (v > 19 ? 1 : 0));
+                return addFoxScore(yellowScore, blueScore, greenScore, orangeScore, purpleScore);
+            },
+            autoMark: () => {
+                // Round track
+                tryMark('O1', 'r1');
+                tryMark('P1', 'r2');
+                tryMark('Q1', 'r3');
+                tryMark('x0', 'r4');
+                tryMark('R1', 'r2');
+                tryMark('R2', 'r3');
+                tryMark('R3', 'r4');
+                tryMark('R4', 'r5');
+                tryMark('R5', 'r6');
+                // Yellow
+                [..."12345"].forEach(i => tryMark('s' + i, '1' + i, '2' + i, '3' + i));
+                if (countType('2')) state.marked['y1'] = sumType('2');
+                if (countType('3')) state.marked['y2'] = sumType('3');
+                if (countType('s')) state.marked['y3'] = sumType('s', (v, i) => v ? [10, 10, 15, 15, 20][i - 1] : 0);
+                tryMark('O2', '12');
+                tryMark('x1', '13');
+                tryMark('x2', '14');
+                tryMark('F1', '15');
+                tryMark('x3', '16');
+                tryMark('Q2', '21');
+                tryMark('x4', '22');
+                tryMark('P2', '23');
+                tryMark('O3', '24');
+                tryMark('x5', '25');
+                // Blue
+                tryMark('x6', '41', '42', '43');
+                tryMark('x7', '44', '45', '46');
+                tryMark('x8', '47', '48', '49');
+                tryMark('x9', '4A', '4B', '4C');
+                tryMark('P3', '41', '44', '47');
+                tryMark('Q3', '42', '45', '4A');
+                tryMark('O4', '43', '48', '4B');
+                tryMark('F2', '46', '49', '4C');
+                tryMark('P4', '41', '45', '48', '4C');
+                // Green
+                [1, 2, 3, 4, 5, 6].forEach(i => {
+                    const r = makeId('T', i), a = makeId('5', 2 * i - 1), b = makeId('5', 2 * i);
+                    if (a in state.marked && b in state.marked) state.marked[r] = state.marked[a] - state.marked[b];
+                });
+                tryMark('O5', '52');
+                tryMark('P5', '54');
+                tryMark('xa', '55');
+                tryMark('xb', '56');
+                tryMark('F3', '58');
+                tryMark('Q4', '59');
+                tryMark('xc', '5A');
+                tryMark('xd', '5C');
+                // Orange
+                tryMark('Q5', '61', '62');
+                tryMark('xe', '62', '63');
+                tryMark('O6', '64', '65');
+                tryMark('xf', '66', '67');
+                tryMark('P6', '67', '68');
+                tryMark('xg', '68', '69');
+                tryMark('xh', '6A', '6B');
+                tryMark('F4', '6B', '6C');
+                // Purple
+                tryMark('O7', '71');
+                tryMark('xi', '73');
+                tryMark('Q6', '74');
+                tryMark('xj', '76');
+                tryMark('Q7', '77');
+                tryMark('P7', '78');
+                tryMark('F5', '7A');
+                tryMark('xk', '7B');
+                tryMark('xl', '7C');
+                // Bonus tracks
+                bonusMark('O', 'a');
+                tryMark('F0', 'a7');
+                bonusMark('P', 'b');
+            }
+        }
         const board2A = {
+            name: 'Twice as Clever',
             image: '2A.png',
             colorScheme: 'board2',
             buildBoard: (container) => {
@@ -860,11 +1050,9 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '7' || id[0] === '8' || id[0] === '9' || id[0] === 'T',
-            allowValue: (id, val) => {
-                if (id[0] !== '7') return val < 7;
-                if (val === 1) return false;
-                const prev = prevId(id);
-                return !prev || state.marked[prev] >= val;
+            allowValue: (id) => {
+                if (id[0] !== '7') return allow1d();
+                return allow2d(val => id === '71' || state.marked[prevId(id)] >= val);
             },
             writeValue: (id, val) => (({ '81': 2, '82': 2, '83': 2, '85': 3, '86': 3, '87': 3, '88': 2, '89': 3, '8B': 4 })[id] || 1) * val,
             score: () => {
@@ -947,6 +1135,7 @@
             }
         };
         const board2B = {
+            name: 'Twice as Clever Challenge I',
             image: '2B.png',
             colorScheme: 'board2',
             buildBoard: (container) => {
@@ -1023,11 +1212,9 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '7' || id[0] === '8' || id[0] === '9' || id[0] === 'T',
-            allowValue: (id, val) => {
-                if (id[0] !== '7') return val < 7;
-                if (val === 1) return false;
-                const prev = prevId(id);
-                return !prev || state.marked[prev] <= val;
+            allowValue: (id) => {
+                if (id[0] !== '7') return allow1d();
+                return allow2d(val => id === '71' || state.marked[prevId(id)] <= val);
             },
             writeValue: (id, val) => (({ '81': 2, '82': 2, '83': 2, '85': 3, '86': 3, '87': 3, '88': 2, '89': 3, '8B': 4 })[id] || 1) * val,
             score: () => {
@@ -1116,6 +1303,7 @@
             }
         };
         const board3A = {
+            name: 'Clever Cubed',
             image: '3A.png',
             colorScheme: 'board3',
             buildBoard: (container) => {
@@ -1200,14 +1388,12 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '5' || id[0] === '6' || id[0] === '8' || id[0] === '9' || id[0] === 'T',
-            allowValue: (id, val) => {
-                if (id[0] !== '5' && id[0] !== '6') return val < 7;
-                if (val === 1) return false;
-                if (val === 7) return true;
+            allowValue: (id) => {
+                if (id[0] !== '5' && id[0] !== '6') return allow1d();
                 const prev = prevId(id);
                 const prevVal = prev ? state.marked[prev] : 7;
                 const reqVal = prevVal + (id[0] === '5' ? -1 : 1);
-                return val === reqVal;
+                return reqVal === 7 ? [7] : [Math.min(reqVal, 7), Math.max(reqVal, 7)];
             },
             writeValue: (id, val) => id[0] === '8' ? [1, 1, 2, 2, 3, 3][val - 1] : (({ '93': 2, '94': 2, '96': 2, '97': 2, '99': 3, '9A': 2, '9B': 2, '9C': 3 })[id] || 1) * val,
             score: () => {
@@ -1303,6 +1489,7 @@
             }
         };
         const board3B = {
+            name: 'Clever Cubed Challenge I',
             image: '3B.png',
             colorScheme: 'board3',
             buildBoard: (container) => {
@@ -1385,15 +1572,13 @@
                 return false;
             },
             markAsValue: (id) => id[0] === '5' || id[0] === '6' || id[0] === '8' || id[0] === '9' || id[0] === 'T',
-            allowValue: (id, val) => {
-                if (id[0] !== '5' && id[0] !== '6') return val < 7;
-                if (val === 1) return false;
-                if (val === 7) return true;
+            allowValue: (id) => {
+                if (id[0] !== '5' && id[0] !== '6') return allow1d();
                 const [t, i] = parseId(id);
                 const prev = prevId(id);
                 const prevVal = prev ? state.marked[prev] : 7;
                 const reqVal = prevVal + (t === '5' ? -1 : 1) * [1, 2, 2, -2, -2, -1][i - 1];
-                return val === reqVal;
+                return reqVal === 7 ? [7] : [Math.min(reqVal, 7), Math.max(reqVal, 7)];
             },
             writeValue: (id, val) => id == '84' ? val + 3 : id === '87' ? val + 4 : id === '8B' ? val + 5 :
                 id[0] === '8' ? [1, 1, 2, 2, 3, 3][val - 1] : (({ '92': 2, '93': 2, '96': 2, '98': 2, '99': 4, '9A': 2, '9C': 3 })[id] || 1) * val,
@@ -1497,6 +1682,7 @@
             }
         };
         const board4A = {
+            name: 'Clever 4Ever',
             image: '4A.png',
             colorScheme: 'board4',
             buildBoard: (container) => {
@@ -1578,11 +1764,9 @@
                 return false;
             },
             markAsValue: (id) => ["1", "2", "3", "5", "6", "7", "G", "y"].includes(id[0]),
-            allowValue: (id, val) => {
-                if (val > 6) return false;
-                if (id[0] !== '1') return true;
-                const prev = prevId(id);
-                return !prev || state.marked[prev] < val;
+            allowValue: (id) => {
+                if (id[0] !== '1' || id === '11') return allow1d();
+                return allow1d(val => state.marked[prevId(id)] < val);
             },
             writeValue: (id, val) => val,
             score: () => {
@@ -1607,10 +1791,6 @@
                 tryMark('R4', 'r5');
                 tryMark('R5', 'r6');
                 // Yellow
-                [..."12345"].forEach(i => tryMark('s' + i, '1' + i, '2' + i, '3' + i));
-                if (countType('2')) state.marked['y1'] = sumType('2');
-                if (countType('3')) state.marked['y2'] = sumType('3');
-                if (countType('s')) state.marked['y3'] = sumType('s', (v, i) => v ? [10, 10, 15, 15, 20][i - 1] : 0);
                 tryMark('Q2', '12');
                 tryMark('x2', '13');
                 tryMark('x3', '14');
@@ -1694,6 +1874,7 @@
         };
 
         const board4B = {
+            name: 'Clever 4Ever Challenge I',
             image: '4B.png',
             colorScheme: 'board4',
             buildBoard: (container) => {
@@ -1779,10 +1960,8 @@
             },
             markAsValue: (id) => ["1", "2", "3", "5", "6", "7", "G", "y"].includes(id[0]),
             allowValue: (id, val) => {
-                if (val > 6) return false;
-                if (id[0] !== '1') return true;
-                const prev = prevId(id);
-                return !prev || state.marked[prev] > val;
+                if (id[0] !== '1' || id === '11') return allow1d();
+                return allow1d(val => state.marked[prevId] > val);
             },
             writeValue: (id, val) => val,
             score: () => {
@@ -1903,29 +2082,30 @@
                 tryMark('x1', 'a7');
             }
         };
+        const boards = [board1A, board1B, board2A, board2B, board3A, board3B, board4A, board4B, board1C];
 
 
+        function allow1d(fn) { return fn ? [1, 2, 3, 4, 5, 6].filter(fn) : [1, 2, 3, 4, 5, 6] }
+        function allow2d(fn) { return fn ? [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(fn) : [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }
         function setupDiceModal(element, id) {
             const modal = document.getElementById('dice-modal');
+            modal.querySelectorAll('div').forEach(e => e.remove());
             modal.style.display = 'flex';
             const xpos = element.offsetLeft + element.clientWidth / 2;
-            let cnt = 0;
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach(i => {
-                const face = document.getElementById('D' + i);
-                const allowed = board.allowValue(id, i);
-                face.style.display = allowed ? 'block' : 'none';
-                if (allowed) {
-                    cnt++;
-                    face.onclick = () => {
-                        state.marked[id] = board.writeValue(id, i);
-                        state.log.push(id + i.toString(36));
-                        updateBoard();
-                        modal.style.display = 'none';
-                    }
+            const allowed = board.allowValue(id);
+            allowed.forEach(i => {
+                const face = document.createElement('div');
+                face.textContent = i;
+                face.onclick = () => {
+                    state.marked[id] = board.writeValue(id, i);
+                    state.log.push(id + i.toString(36));
+                    updateBoard();
+                    modal.style.display = 'none';
                 }
+                modal.append(face);
             });
-            const margin = (cnt * 50 + 50) / 2;
-            modal.style.left = Math.min(Math.max(xpos, margin), 700 - margin) + 'px';
+            const margin = (allowed.length * 50 + 50) / 2;
+            modal.style.left = Math.min(Math.max(xpos, margin), getWidth() - margin) + 'px';
             modal.style.top = (element.offsetTop) + 'px';
         }
         function updateBoard() {
@@ -1955,7 +2135,19 @@
                 if (id in state.marked) element.classList.add('marked'); else element.classList.remove('marked');
             });
         }
-        buildBoard(board4B);
+        boards.forEach(b => {
+            const e = document.createElement('div');
+            e.textContent = b.name;
+            e.onclick = () => {
+                buildBoard(b);
+                state.log = [];
+                replayLog();
+                updateBoard();
+                document.getElementById('board-modal').style.display = 'none';
+            }
+            document.getElementById('board-modal').append(e);
+        })
+        buildBoard(board1B);
         scaleContainer();
         updateBoard();
         window.addEventListener("resize", scaleContainer);

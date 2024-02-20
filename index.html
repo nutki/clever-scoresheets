@@ -174,10 +174,18 @@
             top: 50%;
             transform: translate(-50%, -50%);
             display: flex;
+            gap: 10px;
         }
 
-        #board-modal>div {
-            width: 100%px;
+        #board-modal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #board-modal>div:not(#board-modal-list),
+        #board-modal-list>div {
+            width: 100%;
             height: 45px;
             border-radius: 13px;
             font-family: sans-serif;
@@ -187,6 +195,88 @@
             cursor: pointer;
             border: 3px solid black;
             background-color: #ccc;
+        }
+
+        #history-modal {
+            position: absolute;
+            width: 600px;
+            height: 900px;
+            gap: 10px 15px;
+            flex-direction: column;
+            color: #333;
+            font-size: 24px;
+            line-height: 38px;
+            background-color: #fff;
+            border: 7px solid #ddd;
+            border-radius: 13px;
+            z-index: 3;
+            padding: 10px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+        }
+
+        #history-modal-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        #history-modal-list>div {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        #history-modal-list>div:nth-child(odd) {
+            background-color: #ccc;
+        }
+
+        #history-modal-list>div>div:nth-child(1) {
+            min-width: 120px;
+        }
+
+        #history-modal-list>div>div:nth-child(2) {
+            flex-grow: 1;
+        }
+
+        #history-modal-list>div>div:nth-child(3) {
+            font-size: 30px;
+            font-family: 'numbers';
+        }
+
+        #history-modal>div:not(#history-modal-list) {
+            width: 100%;
+            height: 45px;
+            border-radius: 13px;
+            font-family: sans-serif;
+            text-align: center;
+            font-size: 40px;
+            line-height: 45px;
+            cursor: pointer;
+            border: 3px solid black;
+            background-color: #ccc;
+        }
+
+        select {
+            appearance: none;
+            text-align: center;
+            background-color: transparent;
+            border: none;
+            padding: 0 20px;
+            margin: 0;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: inherit;
+            line-height: inherit;
+        }
+
+        option {
+            font-size: 25px;
         }
 
         #menu-bar {
@@ -204,11 +294,13 @@
         }
 
         #menu-bar>* {
-            display: none
+            display: none;
+            cursor: pointer;
         }
 
         #menu-bar>div.disabled {
-            filter: brightness(.4)
+            filter: brightness(.4);
+            cursor: default
         }
 
         #menu-bar.menu-mode-0>.menu-mode-0 {
@@ -336,25 +428,25 @@
 
 <body>
     <div id="menu-bar" class="menu-mode-0">
-        <div class="menu-mode-0" id="menu-history-prev"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+        <div class="menu-mode-2" id="menu-history-prev"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30" style="fill:#fff">
                 <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
             </svg></div>
-        <div class="menu-mode-0" id="menu-score">
+        <div class="menu-mode-0 menu-mode-2" id="menu-score">
             <div id="menu-score-value">123</div><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30">
                 <path style="fill:#fff"
                     d="M620-360q-17 0-28.5-11.5T580-400v-160q0-17 11.5-28.5T620-600h100q17 0 28.5 11.5T760-560v160q0 17-11.5 28.5T720-360H620Zm20-60h60v-120h-60v120Zm-440 60v-100q0-17 11.5-28.5T240-500h80v-40H200v-60h140q17 0 28.5 11.5T380-560v60q0 17-11.5 28.5T340-460h-80v40h120v60H200Zm250-160v-60h60v60h-60Zm0 140v-60h60v60h-60ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h120v-80h80v80h240v-80h80v80h120q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h290v-60h60v60h290v-480H510v60h-60v-60H160v480Zm0 0v-480 480Z" />
             </svg>
         </div>
-        <div class="menu-mode-2" id="menu-undo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+        <div class="menu-mode-0" id="menu-undo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30">
                 <path style="fill:#fff"
                     d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
             </svg></div>
-        <input class="menu-mode-0" type="range" id="log-slider" value="100" min="0" max="100" step="1"
+        <input class="menu-mode-2" type="range" id="log-slider" value="100" min="0" max="100" step="1"
             oninput="scaleLog()">
-        <div class="menu-mode-2" id="menu-redo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+        <div class="menu-mode-0" id="menu-redo"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30" style="fill:#fff">
                 <path
                     d="M396-200q-97 0-166.5-63T160-420q0-94 69.5-157T396-640h252L544-744l56-56 200 200-200 200-56-56 104-104H396q-63 0-109.5 40T240-420q0 60 46.5 100T396-280h284v80H396Z" />
@@ -375,7 +467,7 @@
             </svg></div>
         <input class="menu-mode-1" type="range" id="scale-slider" value="100" min="30" max="100" step="1"
             oninput="scaleContainer()">
-        <div class="menu-mode-0" id="menu-history-next"><svg xmlns="http://www.w3.org/2000/svg" height="30"
+        <div class="menu-mode-2" id="menu-history-next"><svg xmlns="http://www.w3.org/2000/svg" height="30"
                 viewBox="0 -960 960 960" width="30" style="fill:#fff">
                 <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
             </svg></div>
@@ -383,7 +475,20 @@
     <div id="outer-container">
         <div id="image-container">
             <img id="resizable-image" src="back1.png">
-            <div id="board-modal" style="display:none;"></div>
+            <div id="board-modal" style="display:none;">
+                <div id="board-modal-list"></div>
+                <div id="board-history">History</div>
+                <div id="board-back">Back</div>
+            </div>
+            <div id="history-modal" style="display:none;">
+                <div><select id="history-board-select"></select></div>
+                <div id="history-by-score">Sort by score</div>
+                <div id="history-by-date" style="display: none;">Sort by date</div>
+                <div id="history-show-incomplete">Show incomplete</div>
+                <div id="history-hide-incomplete" style="display: none;">Hide incomplete</div>
+                <div id="history-modal-list"></div>
+                <div id="history-exit">Back</div>
+            </div>
             <div id="score-modal" style="display:none;">
                 <div class="color1">
                     <svg width="200" height="80" viewBox="0 0 9.0286407 3.6113858" xmlns="http://www.w3.org/2000/svg">
@@ -496,8 +601,40 @@
         document.getElementById('menu-history-prev').onclick = () => historyBrowser.prev();
         document.getElementById('menu-history-next').onclick = () => historyBrowser.next();
         document.getElementById('menu-reset').onclick = () => {
-            document.getElementById('board-modal').style.display = 'flex'
+            document.getElementById(historyMode ? 'history-modal' : 'board-modal').style.display = 'flex'
+            document.getElementById('score-modal').style.display = 'none';
         }
+        document.getElementById('history-exit').onclick = () => {
+            document.getElementById('history-modal').style.display = 'none';
+            document.getElementById('board-modal').style.display = 'flex';
+            historyMode = false;
+            updateBoard();
+        }
+        document.getElementById('history-by-date').onclick = () => {
+            document.getElementById('history-by-date').style.display = 'none';
+            document.getElementById('history-by-score').style.display = 'block';
+            historyOrder = 'date';
+            updateBoard()
+        }
+        document.getElementById('history-by-score').onclick = () => {
+            document.getElementById('history-by-score').style.display = 'none';
+            document.getElementById('history-by-date').style.display = 'block';
+            historyOrder = 'score';
+            updateBoard()
+        }
+        document.getElementById('history-show-incomplete').onclick = () => {
+            document.getElementById('history-show-incomplete').style.display = 'none';
+            document.getElementById('history-hide-incomplete').style.display = 'block';
+            historyFilterIncomplete = false;
+            updateBoard()
+        }
+        document.getElementById('history-hide-incomplete').onclick = () => {
+            document.getElementById('history-hide-incomplete').style.display = 'none';
+            document.getElementById('history-show-incomplete').style.display = 'block';
+            historyFilterIncomplete = true;
+            updateBoard()
+        }
+        document.getElementById('history-board-select').onchange = () => updateBoard();
         // document.getElementById('menu-fs').onclick = () => {
         //     if (!document.fullscreenElement) {
         //         document.documentElement.requestFullscreen();
@@ -562,7 +699,9 @@
         function logCanUndo() { return state.logPos > 0; }
         function logCanRedo() { return state.logPos < state.log.length; }
         function logEmpty() { return !state.logPos; }
-        function logIncomplete() { return !state.log.includes('r4'); }
+        function logIncomplete() {
+            return !state.log.includes('r4') || state.log.filter(l => !['R', 'X', 'A', 'B', 'C'].includes(l[0].toUpperCase()).length < 20);
+        }
         function logGetPos() { return state.logPos; }
         function logMaxPos() { return state.log.length; }
         function replayLog() {
@@ -2263,14 +2402,14 @@
             const scores = board.score(), totalScore = scores.reduce((a, v) => a + v, 0);
             scores.forEach((v, i) => document.getElementById('score' + (i + 1)).innerText = v);
             document.getElementById('score').innerText = totalScore;
-            document.getElementById('menu-score-value').innerText = totalScore;
-            document.querySelector('#menu-score svg').style.opacity = .4;
+            document.getElementById('menu-score-value').innerText = historyMode ? totalScore : '';
+            document.querySelector('#menu-score svg').style.opacity = historyMode ? .4 : 1;
             const container = document.querySelector('#image-container');
             const markElements = container.querySelectorAll('.mark');
             markElements.forEach(function (element) {
                 const id = element.id;
                 if (board.markAsValue(id)) element.innerText = id in state.marked ? state.marked[id] : "";
-                const canMark = board.canMark(id);
+                const canMark = !historyMode && board.canMark(id);
                 element.style.zIndex = canMark ? 1 : 0;
                 element.onclick = !canMark ? undefined : (ev) => {
                     const id = ev.target.id;
@@ -2286,23 +2425,69 @@
                 element.style.cursor = canMark ? 'pointer' : 'auto';
                 if (id in state.marked) element.classList.add('marked'); else element.classList.remove('marked');
             });
+            if (historyMode) {
+                const usedBoards = new Set();
+                document.getElementById('history-modal-list').innerHTML = '';
+                let historyEnties = historyBrowser.asList();
+                historyEnties.reverse();
+                if (historyFilterIncomplete) historyEnties = historyEnties.filter(e => !e.incomplete);
+                historyEnties.forEach(e => usedBoards.add(e.board.id));
+                const boardFilter = document.getElementById('history-board-select').value;
+                if (boardFilter) historyEnties = historyEnties.filter(e => e.board.id === boardFilter);
+                if (historyOrder === 'score') historyEnties.sort((a, b) => b.score - a.score);
+                historyEnties.forEach(({ date, score, board, idx }) => {
+                    const entryDiv = document.createElement('div');
+                    const dateDiv = document.createElement('div');
+                    dateDiv.textContent = date;
+                    const scoreDiv = document.createElement('div');
+                    scoreDiv.textContent = score;
+                    const boardDiv = document.createElement('div');
+                    boardDiv.textContent = board.name;
+                    entryDiv.append(dateDiv, boardDiv, scoreDiv);
+                    entryDiv.onclick = () => {
+                        historyBrowser.load(idx);
+                        document.getElementById('history-modal').style.display = 'none';
+                    }
+                    document.getElementById('history-modal-list').append(entryDiv);
+                })
+                document.getElementById('history-board-select').innerHTML = '';
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "All Boards";
+                document.getElementById('history-board-select').append(option);
+                boards.forEach(b => {
+                    if (!usedBoards.has(b.id)) return;
+                    const option = document.createElement('option');
+                    option.value = b.id;
+                    option.textContent = b.name;
+                    document.getElementById('history-board-select').append(option);
+                })
+                document.getElementById('history-board-select').value = boardFilter;
+            }
             document.getElementById('menu-undo').classList[logCanUndo() ? 'remove' : 'add']('disabled');
             document.getElementById('menu-redo').classList[logCanRedo() ? 'remove' : 'add']('disabled');
             document.getElementById('log-slider').max = logMaxPos();
             document.getElementById('log-slider').value = logGetPos();
             document.getElementById('menu-history-prev').classList[historyBrowser.hasPrev() ? 'remove' : 'add']('disabled');
             document.getElementById('menu-history-next').classList[historyBrowser.hasNext() ? 'remove' : 'add']('disabled');
+            document.getElementById('menu-bar').className = historyMode ? 'menu-mode-2' : 'menu-mode-0';
         }
+        let historyFilterBoard = undefined;
+        let historyFilterIncomplete = true;
+        let historyOrder = 'date';
+        let historyMode = false;
         const historyBrowser = (() => {
             const history = JSON.parse(localStorage.getItem('history') || '[]');
             let currentIdx = history.length - 1;
-            const toEntry = ({ b, s, t, i }) => ({
+            const toEntry = ({ b, s, t, i }, idx) => ({
                 board: boards.find(board => board.id === b),
                 date: new Date(t * 1000).toLocaleDateString(),
                 incomplete: !!i,
                 score: s,
+                idx,
             });
             const load = (i = currentIdx) => {
+                if (i < 0 || i >= history.length) return;
                 currentIdx = i;
                 const current = history[currentIdx];
                 const currentEntry = toEntry(current);
@@ -2318,25 +2503,24 @@
                 remove: (i = currentIdx) => {
                     history.splice(i, 1);
                     if (i >= currentIdx) currentIdx--;
+                    load();
                 },
                 next: () => load(currentIdx + 1),
                 prev: () => load(currentIdx - 1),
                 current: () => currentIdx < 0 ? {} : toEntry(history[currentIdx]),
+                save: () => {
+                    history.push({
+                        b: board.id,
+                        l: logToString(),
+                        s: board.score().reduce((a, v) => a + v, 0),
+                        t: Math.floor(Date.now() / 1000),
+                        i: logIncomplete() ? 1 : undefined,
+                    })
+                    if (history.length > 1000) history.splice(0, history.length - 1000);
+                    localStorage.setItem('history', JSON.stringify(history));
+                }
             }
         })();
-        function maybeSaveHistory() {
-            if (logEmpty()) return;
-            const history = JSON.parse(localStorage.getItem('history') || '[]');
-            history.push({
-                b: board.id,
-                l: logToString(),
-                s: board.score().reduce((a, v) => a + v, 0),
-                t: Math.floor(Date.now() / 1000),
-                i: logIncomplete() ? 1 : undefined,
-            })
-            if (history.length > 1000) history.splice(0, history.length - 1000);
-            localStorage.setItem('history', JSON.stringify(history));
-        }
         boards.forEach(b => {
             const e = document.createElement('div');
             e.textContent = b.name;
@@ -2347,23 +2531,24 @@
                 "board4": '#00aae2',
             }[b.colorScheme];
             e.onclick = () => {
-                maybeSaveHistory();
+                if (!logEmpty()) historyBrowser.save();
                 buildBoard(b);
                 logClear();
                 updateBoard();
                 document.getElementById('board-modal').style.display = 'none';
             }
-            document.getElementById('board-modal').append(e);
+            document.getElementById('board-modal-list').append(e);
         })
         load();
-        {
-            const e = document.createElement('div');
-            e.textContent = 'Back';
-            e.onclick = () => document.getElementById('board-modal').style.display = 'none';
-            document.getElementById('board-modal').append(e);
+        document.getElementById('board-back').onclick = () => document.getElementById('board-modal').style.display = 'none';
+        document.getElementById('board-history').onclick = () => {
+            document.getElementById('board-modal').style.display = 'none';
+            document.getElementById('history-modal').style.display = 'flex';
+            historyMode = true;
+            updateBoard();
         }
         document.getElementById('scale-slider').value = parseFloat(localStorage.getItem('scale') || '100') || 100;
-        if (logEmpty()) document.getElementById('board-modal').style.display = 'flex';
+        if (logEmpty()) document.getElementById(historyMode ? 'history-modal' : 'board-modal').style.display = 'flex';
         updateBoard();
         window.addEventListener("resize", scaleContainer);
     </script>

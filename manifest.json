@@ -1,7 +1,7 @@
 {
     "name": "Clever Scoresheets",
     "short_name": "Clever Sheets",
-    "start_url": "/index.html",
+    "start_url": "index.html",
     "display": "fullscreen",
     "orientation": "portrait",
     "background_color": "#000",
